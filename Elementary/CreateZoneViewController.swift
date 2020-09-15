@@ -35,13 +35,13 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		self.blueLevel.value = Float(self.blue)
 		preview.allowsCameraControl = true
 		super.viewDidLoad()
-		texturesContainer.hidden = true
-		colorsContainer.hidden = false
+		texturesContainer.isHidden = true
+		colorsContainer.isHidden = false
 		self.initPreviewZone()
 		self.textures = createTexture()
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		
 		if !World.zones[World.selectedZone!].empty {
 			self.nameOfZone.text = World.zones[World.selectedZone!].name
@@ -49,8 +49,8 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 			
 			if World.zones[World.selectedZone!].textured {
 				self.tabs.selectedSegmentIndex = 1
-				texturesContainer.hidden = false
-				colorsContainer.hidden = true
+				texturesContainer.isHidden = false
+				colorsContainer.isHidden = true
 				preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial?.diffuse.contents = UIImage(named: World.zones[World.selectedZone!].texture!)
 			} else {
 				self.tabs.selectedSegmentIndex = 0
@@ -71,21 +71,21 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		}
 	}
 	
-	@IBAction func redSlider(sender: AnyObject) {
+	@IBAction func redSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.red = CGFloat(redLevel.value)
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func greenSlider(sender: AnyObject) {
+	@IBAction func greenSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.green = CGFloat(greenLevel.value)
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func blueSlider(sender: AnyObject) {
+	@IBAction func blueSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.blue = CGFloat(blueLevel.value)
@@ -93,17 +93,17 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	@IBAction func dismiss(sender: AnyObject) {
-		self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
 	}
 	
 	@IBAction func createZone(sender: AnyObject) {
 		if nameOfZone.text!.isEmpty {
 			// create alert controller
-			let myAlert = UIAlertController(title: "No man's land:", message: "You must provide a name for your zone", preferredStyle: UIAlertControllerStyle.Alert)
+            let myAlert = UIAlertController(title: "No man's land:", message: "You must provide a name for your zone", preferredStyle: UIAlertControllerStyle.alert)
 			// add an "OK" button
-			myAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
 			// show the alert
-			self.presentViewController(myAlert, animated: true, completion: nil)
+            self.present(myAlert, animated: true, completion: nil)
 		} else {
 			// we create the zone either with a color or a texture
 			var texture: String? = nil
@@ -111,18 +111,18 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 				texture = self.textures[self.selectedTexture!]
 			}
 			if didChange || World.zones[World.selectedZone!].empty {
-				World.zones[World.selectedZone!].setZone(texture, name: nameOfZone.text!, red: red, green: green, blue: blue)
+                World.zones[World.selectedZone!].setZone(texture: texture, name: nameOfZone.text!, red: red, green: green, blue: blue)
 			} else {
 				World.zones[World.selectedZone!].name = nameOfZone.text!
 			}
 			
 			Utils.saveHome()
-			self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
 
 		}
 	}
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
 	
@@ -135,7 +135,7 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		return tab
 	}
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		self.view.endEditing(true)
 		return false
 	}
@@ -145,7 +145,7 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		floor.firstMaterial?.diffuse.contents = UIColor(red: self.red, green: self.green, blue: self.blue, alpha: 1)
 		floorNode.removeFromParentNode()
 		floorNode = SCNNode(geometry: floor)
-		floorNode.runAction(SCNAction.repeatActionForever(SCNAction.rotateByX(1, y: 2, z: 3, duration: 10)))
+        floorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 1, y: 2, z: 3, duration: 10)))
 		previewScene.rootNode.addChildNode(floorNode)
 		preview.scene = previewScene
 	}
@@ -163,19 +163,19 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
         // Dispose of any resources that can be recreated.
     }
 	
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return textures.count
 	}
 	
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("textureCell", forIndexPath: indexPath) as! UICollectionViewCellImage
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "textureCell", for: indexPath) as! UICollectionViewCellImage
 		let image = UIImage(named: textures[indexPath.row])
 		cell.imgView.image = image
 		// Configure the cell
 		return cell
 	}
 	
-	func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+	func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
 		self.selectedTexture = indexPath.row
 		didChange = true
 		self.modifyPreviewZone()
@@ -187,11 +187,11 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		
 		switch sender.selectedSegmentIndex {
 		case 0:
-			texturesContainer.hidden = true
-			colorsContainer.hidden = false
+			texturesContainer.isHidden = true
+			colorsContainer.isHidden = false
 		case 1:
-			texturesContainer.hidden = false
-			colorsContainer.hidden = true
+			texturesContainer.isHidden = false
+			colorsContainer.isHidden = true
 			
 		default :
 			break

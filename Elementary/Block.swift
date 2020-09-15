@@ -51,7 +51,7 @@ class Block : NSObject, NSCoding {
         
 		
 		let node = SCNNode(geometry: self.shape)
-        node.geometry!.firstMaterial!.emission.contents = UIColor.blackColor()
+		node.geometry!.firstMaterial!.emission.contents = UIColor.black
         node.setValue(self.id, forKey: "id")
 		node.position = SCNVector3Make(self.x, self.y, self.z)
         node.scale = SCNVector3Make(self.scale, self.scale, self.scale)
@@ -63,7 +63,7 @@ class Block : NSObject, NSCoding {
 		self.node = node
 	}
 	
-	func setTexture(texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
+	func setTexture(_ texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
 		if texture == nil {
 			self.red = red
 			self.green = green
@@ -79,47 +79,47 @@ class Block : NSObject, NSCoding {
 	}
     
     required init(coder decoder: NSCoder) {
-        self.id         = decoder.decodeObjectForKey("id") as! Int
-        self.texture    = decoder.decodeObjectForKey("texture") as? String
-        self.red        = decoder.decodeObjectForKey("red") as! CGFloat
-        self.green      = decoder.decodeObjectForKey("green") as! CGFloat
-        self.blue       = decoder.decodeObjectForKey("blue") as! CGFloat
-        self.x          = decoder.decodeObjectForKey("x") as! Float
-        self.y          = decoder.decodeObjectForKey("y") as! Float
-        self.z          = decoder.decodeObjectForKey("z") as! Float
-        self.shape      = decoder.decodeObjectForKey("shape") as! SCNGeometry
-        self.scale      = decoder.decodeObjectForKey("scale") as! Float
-        self.rotationX  = decoder.decodeObjectForKey("rotationX") as? Float
-        self.rotationY  = decoder.decodeObjectForKey("rotationY") as? Float
-        self.rotationZ  = decoder.decodeObjectForKey("rotationZ") as? Float
-        self.rotationW  = decoder.decodeObjectForKey("rotationW") as? Float
-        self.merge      = decoder.decodeObjectForKey("merge") as! [Int]
-        self.xParent    = decoder.decodeObjectForKey("xParent") as! Float
-        self.yParent    = decoder.decodeObjectForKey("yParent") as! Float
-        self.zParent    = decoder.decodeObjectForKey("zParent") as! Float
+		self.id         = decoder.decodeInteger(forKey: "id")
+		self.texture    = decoder.decodeObject(forKey: "texture") as? String
+		self.red        = decoder.decodeObject(forKey: "red") as! CGFloat
+		self.green      = decoder.decodeObject(forKey: "green") as! CGFloat
+		self.blue       = decoder.decodeObject(forKey: "blue") as! CGFloat
+		self.x          = decoder.decodeObject(forKey: "x") as! Float
+		self.y          = decoder.decodeObject(forKey: "y") as! Float
+		self.z          = decoder.decodeObject(forKey: "z") as! Float
+		self.shape      = decoder.decodeObject(forKey: "shape") as! SCNGeometry
+		self.scale      = decoder.decodeObject(forKey: "scale") as! Float
+		self.rotationX  = decoder.decodeObject(forKey: "rotationX") as? Float
+		self.rotationY  = decoder.decodeObject(forKey: "rotationY") as? Float
+		self.rotationZ  = decoder.decodeObject(forKey: "rotationZ") as? Float
+		self.rotationW  = decoder.decodeObject(forKey: "rotationW") as? Float
+		self.merge      = decoder.decodeObject(forKey: "merge") as! [Int]
+		self.xParent    = decoder.decodeObject(forKey: "xParent") as! Float
+		self.yParent    = decoder.decodeObject(forKey: "yParent") as! Float
+		self.zParent    = decoder.decodeObject(forKey: "zParent") as! Float
         
         super.init()
     }
     
-    func encodeWithCoder(encoder: NSCoder) {
-        encoder.encodeObject(id, forKey: "id")
-        encoder.encodeObject(texture, forKey: "texture")
-        encoder.encodeObject(red, forKey: "red")
-        encoder.encodeObject(green, forKey: "green")
-        encoder.encodeObject(blue, forKey: "blue")
-        encoder.encodeObject(x, forKey: "x")
-        encoder.encodeObject(y, forKey: "y")
-        encoder.encodeObject(z, forKey: "z")
-        encoder.encodeObject(shape, forKey: "shape")
-        encoder.encodeObject(scale, forKey: "scale")
-        encoder.encodeObject(rotationX, forKey: "rotationX")
-        encoder.encodeObject(rotationY, forKey: "rotationY")
-        encoder.encodeObject(rotationZ, forKey: "rotationZ")
-        encoder.encodeObject(rotationW, forKey: "rotationW")
-        encoder.encodeObject(merge, forKey: "merge")
-        encoder.encodeObject(xParent, forKey: "xParent")
-        encoder.encodeObject(yParent, forKey: "yParent")
-        encoder.encodeObject(zParent, forKey: "zParent")
+    func encode(with encoder: NSCoder) {
+		encoder.encode(id, forKey: "id")
+		encoder.encode(texture, forKey: "texture")
+		encoder.encode(red, forKey: "red")
+		encoder.encode(green, forKey: "green")
+		encoder.encode(blue, forKey: "blue")
+		encoder.encode(x, forKey: "x")
+		encoder.encode(y, forKey: "y")
+		encoder.encode(z, forKey: "z")
+		encoder.encode(shape, forKey: "shape")
+		encoder.encode(scale, forKey: "scale")
+		encoder.encode(rotationX, forKey: "rotationX")
+		encoder.encode(rotationY, forKey: "rotationY")
+		encoder.encode(rotationZ, forKey: "rotationZ")
+		encoder.encode(rotationW, forKey: "rotationW")
+		encoder.encode(merge, forKey: "merge")
+		encoder.encode(xParent, forKey: "xParent")
+		encoder.encode(yParent, forKey: "yParent")
+		encoder.encode(zParent, forKey: "zParent")
     }
     
 }

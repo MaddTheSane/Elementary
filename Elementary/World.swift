@@ -33,16 +33,16 @@ class World {
 		World.zones[0].node.position = SCNVector3Make(0, 0, -0.5)
 		World.zones[1].node.position = SCNVector3Make(0, 0, 0.5)
 		
-		World.zones[2].node.rotation = SCNVector4Make(0.0, 1.0, 0.0, PI / 2)
+		World.zones[2].node.rotation = SCNVector4Make(0.0, 1.0, 0.0, .pi / 2)
 		World.zones[2].node.position = SCNVector3Make(0.5, 0, 0)
 		
-		World.zones[3].node.rotation = SCNVector4Make(0.0, 1.0, 0.0, PI / 2)
+		World.zones[3].node.rotation = SCNVector4Make(0.0, 1.0, 0.0, .pi / 2)
 		World.zones[3].node.position = SCNVector3Make(-0.5, 0, 0)
 		
-		World.zones[4].node.rotation = SCNVector4Make(1.0, 0.0, 0.0, PI / 2)
+		World.zones[4].node.rotation = SCNVector4Make(1.0, 0.0, 0.0, .pi / 2)
 		World.zones[4].node.position = SCNVector3Make(0, 0.5, 0)
 		
-		World.zones[5].node.rotation = SCNVector4Make(1.0, 0.0, 0.0, PI / 2)
+		World.zones[5].node.rotation = SCNVector4Make(1.0, 0.0, 0.0, .pi / 2)
 		World.zones[5].node.position = SCNVector3Make(0, -0.5, 0)
 		
 		

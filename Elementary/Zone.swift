@@ -41,23 +41,21 @@ class Zone : NSObject, NSCoding {
 	
 	func buildZone(){
 		let square = SCNBox(width: 1, height: 1, length: 0.00001, chamferRadius: 0.0)
-		square.firstMaterial?.specular.contents = UIColor.whiteColor()
+		square.firstMaterial?.specular.contents = UIColor.white
 		self.node = SCNNode(geometry: square)
 		self.setTexture(self.texture, red: self.red, green: self.green, blue: self.blue)
 	}
 	
 	func buildGround() {
 		let ground = SCNBox(width: 100, height: 1, length: 100, chamferRadius: 0.0)
-		ground.firstMaterial?.specular.contents = UIColor.whiteColor()
+		ground.firstMaterial?.specular.contents = UIColor.white
 		self.ground = SCNNode(geometry: ground)
 		self.setTextureGround(self.texture, red: self.red, green: self.green, blue: self.blue)
 		self.ground.setValue(-1, forKey: "id")
 	}
     
     func getAxisFromGround(min : Bool = true) -> SCNVector3 {
-        var v1 = SCNVector3(x:0, y:0, z:0)
-        var v2 = SCNVector3(x:0, y:0, z:0)
-        World.zones[World.selectedZone!].ground.getBoundingBoxMin(&v1, max:&v2)
+        let (v1, v2) = World.zones[World.selectedZone!].ground.boundingBox //getBoundingBoxMin(&v1, max:&v2)
         return ((min) ? v1 : v2) // min = true -> we want the tiniest
     }
     
@@ -74,7 +72,7 @@ class Zone : NSObject, NSCoding {
                 
             } else { // if the block is merged
                 
-                if blocksMerged.indexOf(self.blocks[i].id) == nil { // if we didn't already used it (merged)
+                if blocksMerged.index(of: self.blocks[i].id) == nil { // if we didn't already used it (merged)
                     
                     let parentNode = SCNNode() // parent node
                     parentNode.setValue(true, forKey: "merged")
@@ -82,7 +80,7 @@ class Zone : NSObject, NSCoding {
                     parentNode.addChildNode(self.blocks[i].node!)
                     
                     for thisBlock: Block in self.blocks {
-                        if self.blocks[i].merge.indexOf(thisBlock.id) != nil { // if we are on a block to merge
+                        if self.blocks[i].merge.index(of: thisBlock.id) != nil { // if we are on a block to merge
                             
                             //print("we merged a block \(thisBlock.id)")
                             thisBlock.buildBlock() // we build a block
@@ -103,18 +101,23 @@ class Zone : NSObject, NSCoding {
         return allBlocksNode
     }
 	
-    func getIndexFromBlock(idBlock : Int = -1) -> Int? {
+    @available(*, unavailable, renamed: "getIndex(fromBlock:)")
+    func getIndexFromBlock(_ idBlock : Int = -1) -> Int? {
+        return nil
+    }
+    
+    func getIndex(fromBlock idBlock : Int = -1) -> Int? {
         let idBlockFind = (idBlock == -1) ? World.zones[World.selectedZone!].selectedBlock : idBlock
         
         for block: Block in World.zones[World.selectedZone!].blocks {
 			if block.id == idBlockFind {
-				return World.zones[World.selectedZone!].blocks.indexOf(block)!
+				return World.zones[World.selectedZone!].blocks.index(of: block)!
 			}
 		}
 		return nil
 	}
 	
-	private func setTextureGround(texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
+	private func setTextureGround(_ texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
 		if texture == nil {
 			self.textured = false
 			self.texture = nil
@@ -129,7 +132,7 @@ class Zone : NSObject, NSCoding {
 		}
 	}
 	
-	private func setTexture(texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
+	private func setTexture(_ texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
 		if texture == nil {
 			self.textured = false
 			self.texture = nil
@@ -157,7 +160,7 @@ class Zone : NSObject, NSCoding {
 		self.empty = true
 		self.setTexture(self.texture, red: self.red, green: self.green, blue: self.blue)
 		self.blocks = []
-		self.links.removeAll(keepCapacity: false)
+		self.links.removeAll(keepingCapacity: false)
         
         self.removeLinks("zoneId", id: self.id)
         
@@ -165,7 +168,7 @@ class Zone : NSObject, NSCoding {
 		Utils.saveHome()
 	}
     
-    func removeLinks(parameter : String, id : Int) {
+    func removeLinks(_ parameter : String, id : Int) {
         //print("removeZone")
         
         switch parameter {
@@ -175,7 +178,7 @@ class Zone : NSObject, NSCoding {
                 
                 for (aKey, _) in array { // we remove it via a zone
                     if (aKey == id) { // we remove all the entries with this id
-                        zone.links.removeValueForKey(aKey)
+                        zone.links.removeValue(forKey: aKey)
                     }
                 }
             }
@@ -188,7 +191,7 @@ class Zone : NSObject, NSCoding {
                 for (aKey, aValue) in array { // we remove the link associated to the the block in the selected zone
                     if (aValue == id) {
                         idZoneToDel = aKey // we get the linked zone
-                        self.links.removeValueForKey(aKey)
+                        self.links.removeValue(forKey: aKey)
                     }
                 }
                 
@@ -197,7 +200,7 @@ class Zone : NSObject, NSCoding {
                     
                     for (aKey, _) in arrayZoneToDel {
                         if (aKey == World.selectedZone) { // we remove the link with the linked zone
-                            World.zones[idZoneToDel].links.removeValueForKey(aKey)
+                            World.zones[idZoneToDel].links.removeValue(forKey: aKey)
                         }
                     }
                 }
@@ -210,30 +213,30 @@ class Zone : NSObject, NSCoding {
     }
 
     required init(coder decoder: NSCoder) {
-        self.id         = decoder.decodeObjectForKey("id") as! Int
-		self.counter    = decoder.decodeObjectForKey("counter") as! Int
-        self.empty      = decoder.decodeObjectForKey("empty") as! Bool
-        self.texture    = decoder.decodeObjectForKey("texture") as? String
-        self.name       = decoder.decodeObjectForKey("name") as! String
-        self.red        = decoder.decodeObjectForKey("red") as! CGFloat
-        self.green      = decoder.decodeObjectForKey("green") as! CGFloat
-        self.blue       = decoder.decodeObjectForKey("blue") as! CGFloat
-        self.textured   = decoder.decodeObjectForKey("textured") as! Bool
-        self.links      = decoder.decodeObjectForKey("links") as! [Int:Int]
+		self.id         = decoder.decodeInteger(forKey: "id")
+		self.counter    = decoder.decodeInteger(forKey: "counter") 
+		self.empty      = decoder.decodeBool(forKey: "empty")
+		self.texture    = decoder.decodeObject(forKey: "texture") as? String
+		self.name       = decoder.decodeObject(forKey: "name") as! String
+		self.red        = decoder.decodeObject(forKey: "red") as! CGFloat
+		self.green      = decoder.decodeObject(forKey: "green") as! CGFloat
+		self.blue       = decoder.decodeObject(forKey: "blue") as! CGFloat
+		self.textured   = decoder.decodeBool(forKey: "textured")
+		self.links      = decoder.decodeObject(forKey: "links") as! [Int:Int]
         super.init()
     }
     
-    func encodeWithCoder(encoder: NSCoder) {
-        encoder.encodeObject(id, forKey:"id")
-		encoder.encodeObject(counter, forKey:"counter")
-        encoder.encodeObject(empty, forKey:"empty")
-        encoder.encodeObject(texture, forKey:"texture")
-        encoder.encodeObject(name, forKey:"name")
-        encoder.encodeObject(red, forKey:"red")
-        encoder.encodeObject(green, forKey:"green")
-        encoder.encodeObject(blue, forKey:"blue")
-        encoder.encodeObject(textured, forKey:"textured")
-        encoder.encodeObject(links, forKey:"links")
+    func encode(with encoder: NSCoder) {
+		encoder.encode(id, forKey:"id")
+		encoder.encode(counter, forKey:"counter")
+		encoder.encode(empty, forKey:"empty")
+		encoder.encode(texture, forKey:"texture")
+		encoder.encode(name, forKey:"name")
+		encoder.encode(red, forKey:"red")
+		encoder.encode(green, forKey:"green")
+		encoder.encode(blue, forKey:"blue")
+		encoder.encode(textured, forKey:"textured")
+		encoder.encode(links, forKey:"links")
     }
 	
 }

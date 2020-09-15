@@ -8,7 +8,7 @@
 
 import UIKit
 import SceneKit
-let PI: Float = Float(M_PI)
+//let PI: Float = Float(M_PI)
 var path: String = ""
 var colorChanged: Bool = false
 
@@ -16,15 +16,15 @@ var colorChanged: Bool = false
 class Utils {
 	
 	private class func documentsDirectory() -> String {
-		let documentsFolderPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] 
+		let documentsFolderPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
 		return documentsFolderPath
 	}
 	
-	private class func fileInDocumentsDirectory(filename: String) -> String {
+	private class func fileInDocumentsDirectory(_ filename: String) -> String {
 		return documentsDirectory() + filename
 	}
 	
-	private class func getPath(id: Int) {
+	private class func getPath(_ id: Int) {
 		var name: String
 		switch id {
         case 0 :
@@ -48,11 +48,12 @@ class Utils {
 	class func resetFiles() {
 		for i in 0...6 {
 			Utils.getPath(i)
-			try! NSFileManager.defaultManager().removeItemAtPath(path)
+			try! FileManager.default.removeItem(atPath: path)
 		}
 		
 	}
 	
+	@discardableResult
 	class func saveHome() -> Bool {
 		Utils.getPath(6)
         
@@ -68,7 +69,7 @@ class Utils {
 		Utils.getPath(6) // Get Path for Home
         
 		//print("path = \(path)")
-		if let scene = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as! LoadAndSaveHome? {
+		if let scene = NSKeyedUnarchiver.unarchiveObject(withFile: path) as! LoadAndSaveHome? {
 			//print("Loaded home!")
             
             for i in scene.zones {
@@ -81,6 +82,7 @@ class Utils {
 		}
     }
     
+	@discardableResult
     class func saveZone() -> Bool {
         let idZone = World.selectedZone!
         Utils.getPath(idZone)
@@ -93,11 +95,11 @@ class Utils {
         return success
     }
     
-    class func loadZone(idZone: Int) -> [Block]? {
+    class func loadZone(_ idZone: Int) -> [Block]? {
         Utils.getPath(idZone) // Get Path for Home
         
         //print("path = \(path)")
-        if let blocks = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as! LoadAndSaveZones? {
+		if let blocks = NSKeyedUnarchiver.unarchiveObject(withFile: path) as! LoadAndSaveZones? {
             //print("Loaded blocks of zone with id \(idZone) !")
             
             return blocks.blocks

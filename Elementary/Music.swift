@@ -15,8 +15,8 @@ class Music {
 		
 		let mediapath = "elementary"
 		
-		if let path = NSBundle.mainBundle().pathForResource(mediapath, ofType: "mp3") {
-			try! player = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: path), fileTypeHint: "mp3")
+		if let path = Bundle.main.path(forResource: mediapath, ofType: "mp3") {
+			try! player = AVAudioPlayer(contentsOf: URL(fileURLWithPath: path), fileTypeHint: "mp3")
 			player?.numberOfLoops = -1
 			player?.prepareToPlay()
 			player?.play()
@@ -24,7 +24,7 @@ class Music {
 	}
 	
 	
-	class func adjustVolume(value: Float) {
+	class func adjustVolume(_ value: Float) {
 		player?.volume = value
 
 	}

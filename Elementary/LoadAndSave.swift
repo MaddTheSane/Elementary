@@ -19,12 +19,12 @@ class LoadAndSaveHome: NSObject, NSCoding {
     }
     
     required init(coder decoder: NSCoder) {
-        self.zones = decoder.decodeObjectForKey("zones") as! [Zone]
+        self.zones = decoder.decodeObject(forKey: "zones") as! [Zone]
         super.init()
     }
     
-    func encodeWithCoder(encoder: NSCoder) {
-        encoder.encodeObject(zones, forKey:"zones")
+    func encode(with encoder: NSCoder) {
+        encoder.encode(zones, forKey:"zones")
     }
 }
 
@@ -38,12 +38,12 @@ class LoadAndSaveZones: NSObject, NSCoding {
     }
     
     required init(coder decoder: NSCoder) {
-        self.blocks = decoder.decodeObjectForKey("blocks") as! [Block]
+        self.blocks = decoder.decodeObject(forKey: "blocks") as! [Block]
         super.init()
     }
     
-    func encodeWithCoder(encoder: NSCoder) {
-        encoder.encodeObject(blocks, forKey:"blocks")
+    func encode(with encoder: NSCoder) {
+        encoder.encode(blocks, forKey:"blocks")
     }
 }
 

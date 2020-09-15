@@ -13,7 +13,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
     
     // MARK: IBAction
     @IBAction func quit(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 	@IBOutlet weak var callOutLabel: UITextView!
 	@IBOutlet weak var callOutPageControl: UIPageControl? = UIPageControl()
@@ -44,35 +44,35 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
 		
 		//swipe
 		//PageControl Swipe
-		let swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
-		swipeRight.direction = UISwipeGestureRecognizerDirection.Right
+		let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
 		swipeRight.numberOfTouchesRequired = 1
 		self.view.addGestureRecognizer(swipeRight)
 		
-		let swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
-		swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
 		swipeLeft.numberOfTouchesRequired = 1
 		self.view.addGestureRecognizer(swipeLeft)
 		//dismiss
-		let swipeDown = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
-		swipeDown.direction = UISwipeGestureRecognizerDirection.Down
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
+        swipeDown.direction = UISwipeGestureRecognizerDirection.down
 		self.view.addGestureRecognizer(swipeDown)
   }
   
 	
 	//swipe
-	func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+	@objc(respondToSwipeGesture:) func respondTo(swipe gesture: UIGestureRecognizer) {
 		let totalPage = self.callOutMsg.count
 		_ = self.callOutPageControl?.currentPage
 
 		if let swipeGesture = gesture as? UISwipeGestureRecognizer {
 			switch swipeGesture.direction {
-			case UISwipeGestureRecognizerDirection.Right:
-				indexPage--
-			case UISwipeGestureRecognizerDirection.Left:
-				indexPage++
-			case UISwipeGestureRecognizerDirection.Down:
-				self.dismissViewControllerAnimated(true, completion: nil)
+			case UISwipeGestureRecognizerDirection.right:
+				indexPage -= 1
+			case UISwipeGestureRecognizerDirection.left:
+				indexPage += 1
+			case UISwipeGestureRecognizerDirection.down:
+                self.dismiss(animated: true, completion: nil)
 				
 			default:
 				break
@@ -85,11 +85,13 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
 	}
 	
 	func updateTextArea() {
-		let text = self.callOutLabel
+		guard let text = self.callOutLabel else {
+            return
+        }
 		text.text = callOutMsg[indexPage]
 		self.callOutPageControl!.currentPage = indexPage
 		text.font = UIFont (name: "Helvetica Neue", size: 16)
-		text.textAlignment = NSTextAlignment.Justified
+        text.textAlignment = NSTextAlignment.justified
 		self.callOutPageControl?.updateCurrentPageDisplay()
 
 	}

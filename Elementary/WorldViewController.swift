@@ -30,52 +30,52 @@ class WorldViewController: UIViewController {
 		world.backgroundColor = UIColor(white: 0, alpha: 0)
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		world.backgroundColor = UIColor(white: 0, alpha: 0)
 		self.world.showsStatistics = false
 		self.sceneSetup()
-		self.goToZoneOutlet.hidden = true
-		self.editButton.hidden = true
-		self.removeButton.hidden = true
+        self.goToZoneOutlet.isHidden = true
+        self.editButton.isHidden = true
+        self.removeButton.isHidden = true
         
 		if Teleport.autoSwitchBackToZone {
 			//print("autoSwitch, worldSelected = \(World.selectedZone) ")
 			Teleport.autoSwitchBackToZone = false
 			Teleport.teleportMode = false
 			World.selectedZone = Teleport.teleportFrom
-			self.performSegueWithIdentifier("displaySelectedZone", sender: self)
+            self.performSegue(withIdentifier: "displaySelectedZone", sender: self)
 			
 		}
         
 		if Teleport.teleportMode {
 			self.hideButtons(true)
 			self.areaName.text = "Touch a world to teleport in"
-			self.areaName.hidden = false
-			self.helpButton.hidden = true
-			self.settingButton.hidden = true
+            self.areaName.isHidden = false
+            self.helpButton.isHidden = true
+            self.settingButton.isHidden = true
 			
         } else if (World.teleportingZoneId != -1) {
           
             self.hideButtons(true)
-            self.areaName.hidden = false
-            self.helpButton.hidden = true
-            self.settingButton.hidden = true
+            self.areaName.isHidden = false
+            self.helpButton.isHidden = true
+            self.settingButton.isHidden = true
             self.areaName.text = "Going to \(World.zones[World.teleportingZoneId].name)..."
             
             SCNTransaction.begin()
-            SCNTransaction.setAnimationDuration(1)
+            SCNTransaction.animationDuration = 1
             //print("teleportingZoneId \(World.teleportingZoneId)")
             self.setNodePosition(World.teleportingZoneId)
             World.selectedZone = World.teleportingZoneId
             
-            _ = NSTimer.scheduledTimerWithTimeInterval(1.3, target: self, selector: Selector("goToTeleportingZone"), userInfo: nil, repeats: false)
+            _ = Timer.scheduledTimer(timeInterval: 1.3, target: self, selector: Selector("goToTeleportingZone"), userInfo: nil, repeats: false)
             World.teleportingZoneId = -1
             SCNTransaction.commit()
             
         } else {
-            self.helpButton.hidden = false
-            self.settingButton.hidden = false
-            self.areaName.hidden = false
+            self.helpButton.isHidden = false
+            self.settingButton.isHidden = false
+            self.areaName.isHidden = false
             self.areaName.text = "Elementary"
 			if World.selectedZone != nil {
                 //print("pas nil")
@@ -83,62 +83,62 @@ class WorldViewController: UIViewController {
 				self.areaName.text = World.zones[World.selectedZone!].name
 				if World.zones[World.selectedZone!].empty == true {
 					self.hideButtons(true)
-					self.goToZoneOutlet.setTitle("Touch here to create a new zone", forState: UIControlState.Normal)
-					self.areaName.hidden = true
-					self.goToZoneOutlet.hidden = false
+                    self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: UIControlState.normal)
+                    self.areaName.isHidden = true
+                    self.goToZoneOutlet.isHidden = false
 				} else {
-					self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", forState: UIControlState.Normal)
+                    self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: UIControlState.normal)
 					self.hideButtons(false)
-					self.areaName.hidden = false
-					self.goToZoneOutlet.hidden = false
+                    self.areaName.isHidden = false
+                    self.goToZoneOutlet.isHidden = false
 				}
 				self.setNodePosition(World.selectedZone!)
 				
             } else {
-                self.goToZoneOutlet.hidden = true
-                self.editButton.hidden = true
-                self.removeButton.hidden = true
+                self.goToZoneOutlet.isHidden = true
+                self.editButton.isHidden = true
+                self.removeButton.isHidden = true
             }
 		}
 		
 	}
     
-    func goToTeleportingZone() {
-        self.performSegueWithIdentifier("displaySelectedZone", sender: self)
+    @objc func goToTeleportingZone() {
+        self.performSegue(withIdentifier: "displaySelectedZone", sender: self)
         self.setNodePosition(World.selectedZone!)
     }
 	
 	@IBAction func gotoSelectedZone(sender: AnyObject) {
 		
 		if World.zones[World.selectedZone!].empty == true {
-			self.performSegueWithIdentifier("createArea", sender: self)
+            self.performSegue(withIdentifier: "createArea", sender: self)
 			
 		} else {
-			self.performSegueWithIdentifier("displaySelectedZone", sender: self)
+            self.performSegue(withIdentifier: "displaySelectedZone", sender: self)
 			self.setNodePosition(World.selectedZone!)
 		}
 	}
 	
 	@IBAction func removeSelectedZone(sender: AnyObject) {
 		// create alert controller
-		let myAlert = UIAlertController(title: "Warning!", message: "Are you sure to delete \(World.zones[World.selectedZone!].name)? All the data inside the zone will be lost.", preferredStyle: UIAlertControllerStyle.Alert)
+        let myAlert = UIAlertController(title: "Warning!", message: "Are you sure to delete \(World.zones[World.selectedZone!].name)? All the data inside the zone will be lost.", preferredStyle: UIAlertControllerStyle.alert)
 		// add an "OK" button
-		myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
 			World.zones[World.selectedZone!].removeZone()
 			self.hideButtons(true)
             self.hideButtonClearFace()
 		}))
 		// add an "Cancel" button
-		myAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        myAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		// show the alert
-		self.presentViewController(myAlert, animated: true, completion: nil)
+        self.present(myAlert, animated: true, completion: nil)
 	}
 	
 	@IBAction func editSelectedZone(sender: AnyObject) {
-		self.performSegueWithIdentifier("createArea", sender: self)
-		self.goToZoneOutlet.hidden = true
-		self.editButton.hidden = true
-		self.removeButton.hidden = true
+        self.performSegue(withIdentifier: "createArea", sender: self)
+        self.goToZoneOutlet.isHidden = true
+        self.editButton.isHidden = true
+        self.removeButton.isHidden = true
         
         Utils.saveHome()
 	}
@@ -151,7 +151,7 @@ class WorldViewController: UIViewController {
         //With or without (you) saved zones
         if zonesLoaded != nil { // Saved (and loaded) zones
             World.zones = zonesLoaded!
-            self.worldNode = World.buildWorld(true) // Without New Zones, just load saved zones
+            self.worldNode = World.buildWorld(withoutNewZones: true) // Without New Zones, just load saved zones
         } else {
             self.worldNode = World.buildWorld() // Create new zones
         }
@@ -172,13 +172,13 @@ class WorldViewController: UIViewController {
 		world.autoenablesDefaultLighting = false
 		let ambientLightNode = SCNNode()
 		ambientLightNode.light = SCNLight()
-		ambientLightNode.light?.type = SCNLightTypeAmbient
-		ambientLightNode.light?.color = UIColor.whiteColor()
+        ambientLightNode.light?.type = SCNLight.LightType.ambient
+		ambientLightNode.light?.color = UIColor.white
 		scene.rootNode.addChildNode(ambientLightNode)
 		let omniLightNode = SCNNode()
 		omniLightNode.light = SCNLight()
-		omniLightNode.light!.type = SCNLightTypeOmni
-		omniLightNode.light!.color = UIColor.lightGrayColor()
+        omniLightNode.light!.type = SCNLight.LightType.omni
+		omniLightNode.light!.color = UIColor.lightGray
 		omniLightNode.position = SCNVector3Make(50, 50, 50)
 		scene.rootNode.addChildNode(omniLightNode)
 		world.scene = scene
@@ -195,14 +195,14 @@ class WorldViewController: UIViewController {
 		var gestureRecognizers = [UIGestureRecognizer]()
 		gestureRecognizers.append(tapGesture)
 		if let existingGestureRecognizers = world.gestureRecognizers {
-			gestureRecognizers.appendContentsOf(existingGestureRecognizers)
+			gestureRecognizers.append(contentsOf: existingGestureRecognizers)
 		}
 		world.gestureRecognizers = gestureRecognizers
 		
 	}
 															
 	func rotateWorld() {
-		self.worldNode.runAction(SCNAction.repeatActionForever(SCNAction.rotateByX(5, y: 1, z: 1, duration: 10)), forKey: "rotation")
+        self.worldNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 5, y: 1, z: 1, duration: 10)), forKey: "rotation")
 	}
 	
 	func displayZones(){
@@ -230,82 +230,82 @@ class WorldViewController: UIViewController {
 		}
 	}
 	
-	func panGesture(sender: UIPanGestureRecognizer) {
+	@objc func panGesture(_ sender: UIPanGestureRecognizer) {
 		self.hideButtons(true)
-        self.worldNode.removeActionForKey("rotation")
+        self.worldNode.removeAction(forKey: "rotation")
         World.selectedZone = nil
         
         //Customizing camera function
-		let translation = sender.translationInView(sender.view!)
+        let translation = sender.translation(in: sender.view!)
 		let translationX : Float = (Float)(translation.x)
 		let translationY : Float = (Float)(translation.y)
-		let newAngleX: Float = (Float)(translation.x)*PI/180.0
-		let newAngleY: Float = (Float)(translation.y)*PI/180.0
+		let newAngleX: Float = (Float)(translation.x) * .pi/180.0
+		let newAngleY: Float = (Float)(translation.y) * .pi/180.0
 		var newAngle: Float = sqrt(newAngleX*newAngleX + newAngleY*newAngleY)
 		let proportion: Float = sqrt(translationX * translationX + translationY * translationY)
 		let xProportion = translationX / proportion
 		let yProportion = translationY / proportion
 		newAngle += currentAngle
 		worldNode.transform = SCNMatrix4MakeRotation(newAngle, yProportion, xProportion, 0)
-		self.worldNode.removeActionForKey("rotation")
+		self.worldNode.removeAction(forKey: "rotation")
 
-		if (sender.state == UIGestureRecognizerState.Ended){
+        if (sender.state == UIGestureRecognizerState.ended){
 			currentAngle = newAngle
 		}
 	}
 	
-	func setNodePosition(id: Int){
+	func setNodePosition(_ id: Int){
 		switch id {
 		case 0 :
 			cameraNode.pivot = SCNMatrix4MakeRotation(0, 0, 0, 0)
 			world.scene?.rootNode.pivot = SCNMatrix4MakeRotation(0, 0, 0, 0)
 			worldNode.pivot = SCNMatrix4MakeRotation(0, 0, 0, 0)
-			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, PI)
+			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, .pi)
 		case 1 :
-			worldNode.parentNode?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
+            worldNode.parent?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
 			worldNode.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
 		case 2 :
-			worldNode.parentNode?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
-			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, -PI/2)
+            worldNode.parent?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
+			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, -.pi/2)
 		case 3 :
-			worldNode.parentNode?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
-			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, PI/2)
+            worldNode.parent?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
+			worldNode.rotation = SCNVector4Make(0.0, 1.0, 0.0, .pi/2)
 		case 4 :
-            worldNode.parentNode?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
-			worldNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, PI/2)
+            worldNode.parent?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
+			worldNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, .pi/2)
 		case 5 :
-			worldNode.parentNode?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
-			worldNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, -PI/2)
+            worldNode.parent?.rotation = SCNVector4Make(0.0, 0.0, 0.0, 0)
+			worldNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, -.pi/2)
 		default :
 			break
 		}
 	}
 	
-	func handleTap(gestureRecognize: UIGestureRecognizer) {
+	@objc func handleTap(_ gestureRecognize: UIGestureRecognizer) {
         self.hideButtonClearFace()
 
         // check what nodes are tapped
-		let p = gestureRecognize.locationInView(world)
+        let p = gestureRecognize.location(in: world)
 		
 		let hitResults = world.hitTest(p, options: nil)
         // check that we clicked on at least one object
         if hitResults.count > 0 {
             // retrieved the first clicked object
             let result: AnyObject! = hitResults[0]
-            let id: Int  = result.node.valueForKey("id") as! Int
+            let id: Int  = result.node.value(forKey: "id") as! Int
             if Teleport.teleportMode {
                 let arrayLinks : [Int:Int]? = World.zones[id].links
                 
-                if (arrayLinks!.keys.indexOf(Teleport.teleportFrom) != nil) { // Zone already linked
-                    let alert = UIAlertController(title: "Warning", message: "This zone is already linked with the previous.\nYou can link zones between themselves only once.", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+                if (arrayLinks!.keys.index(of: Teleport.teleportFrom) != nil) { // Zone already linked
+                    let alert = UIAlertController(title: "Warning", message: "This zone is already linked with the previous.\nYou can link zones between themselves only once.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                     
                 } else { // If not linked, ok
                     Teleport.teleportTo = id
                     if Teleport.checkTeleport() {
                         World.selectedZone = id
-                        self.performSegueWithIdentifier("displaySelectedZone", sender: self)
+                        self.performSegue(withIdentifier: "displaySelectedZone", sender: self)
                     }
                 }
             } else {
@@ -314,19 +314,19 @@ class WorldViewController: UIViewController {
                     let material = result.node!.geometry!.firstMaterial!
                     // highlight it
                     SCNTransaction.begin()
-                    SCNTransaction.setAnimationDuration(1)
-                    material.emission.contents = UIColor.redColor()
-                    self.worldNode.removeActionForKey("rotation")
+                    SCNTransaction.animationDuration = 1
+                    material.emission.contents = UIColor.red
+                    self.worldNode.removeAction(forKey: "rotation")
                     self.setNodePosition(id)
                     World.selectedZone = id
                     self.areaName.text = World.zones[World.selectedZone!].name
                     if World.zones[World.selectedZone!].empty == true {
                         self.hideButtons(true)
-                        self.goToZoneOutlet.setTitle("Touch here to create a new zone", forState: UIControlState.Normal)
-                        self.areaName.hidden = true
-                        self.goToZoneOutlet.hidden = false
+                        self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: UIControlState.normal)
+                        self.areaName.isHidden = true
+                        self.goToZoneOutlet.isHidden = false
                     } else {
-                        self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", forState: UIControlState.Normal)
+                        self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: UIControlState.normal)
                         self.hideButtons(false)
                     }
                     SCNTransaction.commit()
@@ -344,8 +344,8 @@ class WorldViewController: UIViewController {
     func hideButtonClearFace(withoutRotate : Bool = false) {
         if (World.selectedZone != nil) {
             SCNTransaction.begin()
-            SCNTransaction.setAnimationDuration(2)
-            World.zones[World.selectedZone!].node.geometry!.firstMaterial!.emission.contents = UIColor.blackColor()
+            SCNTransaction.animationDuration = 2
+            World.zones[World.selectedZone!].node.geometry!.firstMaterial!.emission.contents = UIColor.black
             SCNTransaction.commit()
         }
         
@@ -356,11 +356,11 @@ class WorldViewController: UIViewController {
         }
     }
 	
-	func hideButtons(bool: Bool){
-        self.goToZoneOutlet.hidden = bool
-        self.editButton.hidden = bool
-        self.removeButton.hidden = bool
-        self.areaName.hidden = bool
+	func hideButtons(_ bool: Bool){
+        self.goToZoneOutlet.isHidden = bool
+        self.editButton.isHidden = bool
+        self.removeButton.isHidden = bool
+        self.areaName.isHidden = bool
 	}
 
 

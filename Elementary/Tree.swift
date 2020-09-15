@@ -17,7 +17,7 @@ class Tree {
 		let treeBase = SCNNode(geometry: SCNCylinder(radius: 0.2, height: baseHeight))
 		treeBase.setValue(2, forKey: "id")
 
-		treeBase.geometry?.firstMaterial?.diffuse.contents = UIColor.brownColor()
+		treeBase.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
 
 		let numberOfLevels = 4
 

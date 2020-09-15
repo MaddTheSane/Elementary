@@ -32,15 +32,15 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		preview.allowsCameraControl = true
 		super.viewDidLoad()
 		self.textures = createTexture()
-		texturesContainer.hidden = true
-		colorsContainer.hidden = false
+		texturesContainer.isHidden = true
+		colorsContainer.isHidden = false
 		self.redLevel.value = Float(self.red)
 		self.greenLevel.value = Float(self.green)
 		self.blueLevel.value = Float(self.blue)
 		
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		self.initPreviewZone()
 		self.redLevel.value = Float(self.red)
 		self.greenLevel.value = Float(self.green)
@@ -56,7 +56,7 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		return tab
 	}
 	
-	@IBAction func redSlider(sender: AnyObject) {
+	@IBAction func redSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.red = CGFloat(redLevel.value)
@@ -64,7 +64,7 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func greenSlider(sender: AnyObject) {
+	@IBAction func greenSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.green = CGFloat(greenLevel.value)
@@ -72,7 +72,7 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func blueSlider(sender: AnyObject) {
+	@IBAction func blueSlider(_ sender: AnyObject) {
 		self.selectedTexture = nil
 		didChange = true
 		self.blue = CGFloat(blueLevel.value)
@@ -80,8 +80,8 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func dismiss(sender: AnyObject) {
-		self.dismissViewControllerAnimated(true, completion: nil)
+	@IBAction func dismiss(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
 	}
 	
 	@IBAction func colorBlock(sender: AnyObject) {
@@ -91,30 +91,30 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 			texture = self.textures[self.selectedTexture!]
 		}
 		if didChange {
-			let index = World.zones[World.selectedZone!].getIndexFromBlock()
+            let index = World.zones[World.selectedZone!].getIndex()
 			World.zones[World.selectedZone!].blocks[index!].setTexture(texture, red: self.red, green: self.green, blue: self.blue)
 			
 			Utils.saveZone()
 			colorChanged = true
 		}
-		self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
 	}
 	
 	func initPreviewZone(){
 		// reload current color OR texture
-		let index = World.zones[World.selectedZone!].getIndexFromBlock()
+        let index = World.zones[World.selectedZone!].getIndex()
 		
 		floorNode.removeFromParentNode()
 		floorNode = SCNNode(geometry: World.zones[World.selectedZone!].blocks[index!].shape)
 		
-		floorNode.runAction(SCNAction.repeatActionForever(SCNAction.rotateByX(1, y: 2, z: 3, duration: 10)))
+        floorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 1, y: 2, z: 3, duration: 10)))
 		previewScene.rootNode.addChildNode(floorNode)
 		preview.scene = previewScene
-		self.preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial?.emission.contents = UIColor.blackColor()
+		self.preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial?.emission.contents = UIColor.black
 		if World.zones[World.selectedZone!].blocks[index!].texture != nil {
 			self.tabs.selectedSegmentIndex = 1
-			self.texturesContainer.hidden = false
-			self.colorsContainer.hidden = true
+			self.texturesContainer.isHidden = false
+			self.colorsContainer.isHidden = true
 			self.preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial?.diffuse.contents = UIImage(named: World.zones[World.selectedZone!].blocks[index!].texture!)
 		} else {
 			self.tabs.selectedSegmentIndex = 0
@@ -132,26 +132,26 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 	func modifyPreviewZone(){
 		if tabs.selectedSegmentIndex == 0 {
 			preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial!.diffuse.contents = UIColor(red: self.red, green: self.green, blue: self.blue, alpha: 1)
-			let index = World.zones[World.selectedZone!].getIndexFromBlock()
+            let index = World.zones[World.selectedZone!].getIndex()
 			World.zones[World.selectedZone!].blocks[index!].texture = nil
 		} else {
 			preview.scene!.rootNode.childNodes[0].geometry!.firstMaterial?.diffuse.contents = UIImage(named: textures[self.selectedTexture!])
 		}
 	}
 	
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return textures.count
 	}
 	
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("textureCell", forIndexPath: indexPath) as! UICollectionViewCellImage
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "textureCell", for: indexPath) as! UICollectionViewCellImage
 		let image = UIImage(named: textures[indexPath.row])
 		cell.imgView.image = image
 		// Configure the cell
 		return cell
 	}
 	
-	func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
 		self.selectedTexture = indexPath.row
 		didChange = true
 		self.modifyPreviewZone()
@@ -162,11 +162,11 @@ class ColorViewController: UIViewController, UICollectionViewDataSource, UIColle
 		
 		switch sender.selectedSegmentIndex {
 		case 0:
-			texturesContainer.hidden = true
-			colorsContainer.hidden = false
+			texturesContainer.isHidden = true
+			colorsContainer.isHidden = false
 		case 1:
-			texturesContainer.hidden = false
-			colorsContainer.hidden = true
+			texturesContainer.isHidden = false
+			colorsContainer.isHidden = true
 			
 		default :
 			break

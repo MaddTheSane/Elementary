@@ -14,7 +14,7 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
 
     
     @IBAction func quit(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+		self.dismiss(animated: true, completion: nil)
     }
     
 	@IBOutlet weak var volume: UISlider!
@@ -26,18 +26,18 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
     override func viewDidLoad() {
         super.viewDidLoad()
 		let swipeDown = UISwipeGestureRecognizer(target: self, action: "swiped:")
-		swipeDown.direction = UISwipeGestureRecognizerDirection.Down
+        swipeDown.direction = UISwipeGestureRecognizerDirection.down
 		self.view.addGestureRecognizer(swipeDown)
 		let _ :UIViewController! = self.presentingViewController
     }
 	
-	func swiped(gesture : UIGestureRecognizer) {
+	func swiped(_ gesture : UIGestureRecognizer) {
 		if let swipeGesture = gesture as? UISwipeGestureRecognizer {
 			
 			switch swipeGesture.direction {
 
-			case UISwipeGestureRecognizerDirection.Down:
-				self.dismissViewControllerAnimated(true, completion: nil)
+            case UISwipeGestureRecognizerDirection.down:
+                self.dismiss(animated: true, completion: nil)
 				
 			default:
 				break
@@ -53,11 +53,11 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
     }
 	
 	
-	@IBAction func resetGame(sender: AnyObject) {
+	@IBAction func resetGame(_ sender: AnyObject) {
 		// create alert controller
-		let myAlert = UIAlertController(title: "Warning", message: "Are you sure to reset Elementary? Everything will be lost.", preferredStyle: UIAlertControllerStyle.Alert)
+        let myAlert = UIAlertController(title: "Warning", message: "Are you sure to reset Elementary? Everything will be lost.", preferredStyle: UIAlertControllerStyle.alert)
 		// add an "OK" button
-		myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
 			for zone in World.zones {
 				World.selectedZone = zone.id
 				zone.removeZone()
@@ -65,12 +65,12 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
 			Utils.resetFiles()
 			
             World.selectedZone = nil
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
 		}))
 		// add an "Cancel" button
-		myAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        myAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		// show the alert
-		self.presentViewController(myAlert, animated: true, completion: nil)
+        self.present(myAlert, animated: true, completion: nil)
         
         
 	}

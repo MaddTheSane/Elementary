@@ -29,11 +29,11 @@ class Teleport {
             }
             
             var nbreMerged = 0
-            let nbreBlocks = blocksLoaded?.count
+            let nbreBlocks = blocksLoaded?.count ?? 0
             
             for block in World.zones[teleportTo].blocks {
                 if (block.merge.count != 0) {
-                    nbreMerged++
+                    nbreMerged += 1
                 }
             }
             
@@ -56,7 +56,7 @@ class Teleport {
 		for zone in World.zones {
             let arrayLinks : [Int:Int]? = zone.links
             
-            if zone.id != teleportFrom && arrayLinks!.keys.indexOf(teleportFrom) == nil { // Zone not itself or not linked
+            if zone.id != teleportFrom && arrayLinks!.keys.index(of: teleportFrom) == nil { // Zone not itself or not linked
                 let blocksLoaded = Utils.loadZone(zone.id)
                 
                 if blocksLoaded != nil { // Saved (and loaded) blocks
@@ -64,13 +64,13 @@ class Teleport {
                 }
                 
                 var nbreMerged = 0
-                let nbreBlocks = blocksLoaded?.count
+                let nbreBlocks = blocksLoaded?.count ?? 0
                 
                 print("Zone \(zone.id) - nbreMerged \(nbreMerged) - nbreBlock \(nbreBlocks)")
                 
                 for block in World.zones[zone.id].blocks {
                     if (block.merge.count != 0) {
-                        nbreMerged++
+                        nbreMerged += 1
                     }
                 }
                 

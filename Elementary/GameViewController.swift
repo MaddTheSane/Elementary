@@ -53,7 +53,7 @@ class GameViewController: UIViewController {
 		//scnView.backgroundColor = UIColor(white: 0, alpha: 0)
     }
 	
-	override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
 		
 		//scnView.backgroundColor = UIColor(white: 0, alpha: 0)
 		
@@ -68,13 +68,13 @@ class GameViewController: UIViewController {
 		if (Teleport.teleportMode){
 			self.hideTeleportMode(true)
 			// create alert controller
-			let myAlert = UIAlertController(title: "Teleportation", message: "Now just choose the block you want to link with.\nPlease note that you can't link with a merged block.", preferredStyle: UIAlertControllerStyle.Alert)
+            let myAlert = UIAlertController(title: "Teleportation", message: "Now just choose the block you want to link with.\nPlease note that you can't link with a merged block.", preferredStyle: UIAlertControllerStyle.alert)
 			// add an "Got it!" button
-			myAlert.addAction(UIAlertAction(title: "Got it", style: .Default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: "Got it", style: .default, handler: nil))
 			// show the alert
-			self.presentViewController(myAlert, animated: true, completion: nil)
+            self.present(myAlert, animated: true, completion: nil)
 		} else {
-			let doubleTapGesture = UITapGestureRecognizer(target: self, action: "resetCamera")
+			let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(GameViewController.resetCamera))
 			doubleTapGesture.numberOfTapsRequired = 2
 			view.addGestureRecognizer(doubleTapGesture)
 		}
@@ -85,7 +85,7 @@ class GameViewController: UIViewController {
 		}
 	}
 	
-	func resetCamera() {
+	@objc func resetCamera() {
 		self.scene = nil
 		self.scnView.scene = self.scene
 		self.sceneSetup()
@@ -95,7 +95,7 @@ class GameViewController: UIViewController {
         //print("cancel merge")
        
         for blocks : SCNNode in self.mergingNodes {
-            blocks.geometry!.firstMaterial!.emission.contents = UIColor.blackColor()
+            blocks.geometry!.firstMaterial!.emission.contents = UIColor.black
         }
         
         mergingNodes = []
@@ -114,13 +114,13 @@ class GameViewController: UIViewController {
             for block : SCNNode in self.mergingNodes {
                 parentNode.addChildNode(block)
                 
-                idBlocks.append(block.valueForKey("id") as! Int)
+                idBlocks.append(block.value(forKey: "id") as! Int)
             }
             
             self.scene!.rootNode.addChildNode(parentNode)
             
             for id : Int in idBlocks {
-                let index = World.zones[World.selectedZone!].getIndexFromBlock(id)
+                let index = World.zones[World.selectedZone!].getIndex(fromBlock: id)
                 
                 for mergeId : Int in idBlocks {
                     if (mergeId != id) { // We add merge id if it isn't the actual block
@@ -143,9 +143,9 @@ class GameViewController: UIViewController {
             
         } else { // Only one block
             
-            let alert = UIAlertController(title: "Warning", message: "Please select more than one block to merge.", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Warning", message: "Please select more than one block to merge.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             
         }
     }
@@ -155,37 +155,37 @@ class GameViewController: UIViewController {
         
         let msg = "You can now select all the objects you want to merge.\n\nTouch OK to merge the selected objects or the red cross to cancel."
         
-        let alert = UIAlertController(title: "Merging", message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Merging", message: msg, preferredStyle: UIAlertControllerStyle.alert)
         
-        alert.addAction(UIAlertAction(title: "Got it", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "Got it", style: .default, handler: { (action) -> Void in
             self.showMergeButton(true)
             //print(self.mergingNodes)
             World.zones[World.selectedZone!].selectedNode = nil
             World.zones[World.selectedZone!].selectedBlock = -1
         }))
 
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
         
         
     }
     
     @IBAction func unmergeButtonClick(sender: AnyObject) {
-        if (World.zones[World.selectedZone!].selectedNode?.valueForKey("merged") != nil) {
+        if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") != nil) {
             // create alert controller
-            let myAlert = UIAlertController(title: "Warning", message: "Are you sure to unmerge these blocks?", preferredStyle: UIAlertControllerStyle.Alert)
+            let myAlert = UIAlertController(title: "Warning", message: "Are you sure to unmerge these blocks?", preferredStyle: UIAlertControllerStyle.alert)
             // add an "OK" button
-            myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
                 for childBlocks : AnyObject in World.zones[World.selectedZone!].selectedNode!.childNodes {
                     let aChildBlock = childBlocks as? SCNNode
-                    let idBlock: Int = aChildBlock!.valueForKey("id") as! Int
+                    let idBlock: Int = aChildBlock!.value(forKey: "id") as! Int
                     
-                    let index = World.zones[World.selectedZone!].getIndexFromBlock(idBlock)
+                    let index = World.zones[World.selectedZone!].getIndex(fromBlock: idBlock)
                     World.zones[World.selectedZone!].blocks[index!].merge = [Int]()
                     
-                    childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.blackColor()
+                    childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.black
                 }
                 
                 // we remove the parent node
@@ -200,32 +200,32 @@ class GameViewController: UIViewController {
                 World.zones[World.selectedZone!].selectedBlock = -1
                 Utils.saveZone()
                 
-                self.unmergeButton.hidden = true
+                self.unmergeButton.isHidden = true
             }))
             // add an "Cancel" button
-            myAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            myAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             // show the alert
-            self.presentViewController(myAlert, animated: true, completion: nil)
+            self.present(myAlert, animated: true, completion: nil)
         }
     }
     
     @IBAction func infoButtonClick(sender: AnyObject) {
 		let precision = 1
         let sNode = World.zones[World.selectedZone!].selectedNode!
-		let width = NSString(format: "%.\(precision)f", getDimensionForSelectedNode("x"))
-		let height = NSString(format: "%.\(precision)f", getDimensionForSelectedNode("y"))
-        let profondeur = NSString(format: "%.\(precision)f", getDimensionForSelectedNode("z"))
+		let width = String(format: "%.\(precision)f", getDimensionForSelectedNode("x"))
+		let height = String(format: "%.\(precision)f", getDimensionForSelectedNode("y"))
+        let profondeur = String(format: "%.\(precision)f", getDimensionForSelectedNode("z"))
 		var msg : String = ""
     
-        if (World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") != nil) {
+        if (World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") != nil) {
             msg += "Block merged\n\n"
         } else {
-			var type = String(stringInterpolationSegment: sNode.geometry!).componentsSeparatedByString(":")[0].componentsSeparatedByString("<SCN")
+            let type = String(describing: sNode.geometry!).components(separatedBy: ":")[0].components(separatedBy:"<SCN")
             msg += "Type :  \(type[1])\n"
             msg += "Id :  \(World.zones[World.selectedZone!].selectedBlock)\n\n"
-			let x = NSString(format: "%.\(precision)f", sNode.position.x)
-			let y = NSString(format: "%.\(precision)f", sNode.position.y)
-			let z = NSString(format: "%.\(precision)f", sNode.position.z)
+			let x = String(format: "%.\(precision)f", sNode.position.x)
+			let y = String(format: "%.\(precision)f", sNode.position.y)
+			let z = String(format: "%.\(precision)f", sNode.position.z)
             msg += "Position x :  \(x)\n"
             msg += "Position y :  \(y)\n"
             msg += "Position z :  \(z)\n\n"
@@ -236,18 +236,18 @@ class GameViewController: UIViewController {
         msg += "Height :  \(height)\n"
         msg += "Depth :  \(profondeur)"
         
-        let alert = UIAlertController(title: "Informations", message: msg, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Informations", message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 	
 	func sceneSetup(){
 		self.scene = SCNScene()
 		//Building the ground
 		World.zones[World.selectedZone!].buildGround()
-		World.zones[World.selectedZone!].ground.physicsBody = SCNPhysicsBody.staticBody()
+        World.zones[World.selectedZone!].ground.physicsBody = SCNPhysicsBody.static()
 		self.scene!.rootNode.addChildNode(World.zones[World.selectedZone!].ground)
-		self.scene!.rootNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, PI/40)
+		self.scene!.rootNode.rotation = SCNVector4Make(1.0, 0.0, 0.0, .pi/40)
 		
 		let blocksLoaded = Utils.loadZone(World.selectedZone!)
 		
@@ -270,15 +270,15 @@ class GameViewController: UIViewController {
 		// create and add a light to the scene
 		let lightNode = SCNNode()
 		lightNode.light = SCNLight()
-		lightNode.light!.type = SCNLightTypeOmni
+        lightNode.light!.type = SCNLight.LightType.omni
 		lightNode.position = SCNVector3(x: 0, y: 100, z: 100)
 		scene!.rootNode.addChildNode(lightNode)
 		
 		// create and add an ambient light to the scene
 		let ambientLightNode = SCNNode()
 		ambientLightNode.light = SCNLight()
-		ambientLightNode.light!.type = SCNLightTypeAmbient
-		ambientLightNode.light!.color = UIColor.darkGrayColor()
+        ambientLightNode.light!.type = SCNLight.LightType.ambient
+        ambientLightNode.light!.color = UIColor.darkGray
 		self.scene!.rootNode.addChildNode(ambientLightNode)
         
         self.scnView.scene = scene
@@ -299,45 +299,45 @@ class GameViewController: UIViewController {
 		self.scnView.backgroundColor = UIColor(white: 0, alpha: 0)
 		
 		// add a tap gesture recognizer
-		let tapGesture = UITapGestureRecognizer(target: self, action: "handleTap:")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(GameViewController.handleTap(_:)))
 		var gestureRecognizers = [UIGestureRecognizer]()
 		gestureRecognizers.append(tapGesture)
 		if let existingGestureRecognizers = scnView.gestureRecognizers {
-			gestureRecognizers.appendContentsOf(existingGestureRecognizers)
+			gestureRecognizers.append(contentsOf: existingGestureRecognizers)
 		}
 		scnView.gestureRecognizers = gestureRecognizers
 	}
 	
 	//IB Actions Methods
-	@IBAction func dismiss(sender: AnyObject) {
-		self.dismissViewControllerAnimated(true, completion: nil)
+	@IBAction func dismiss(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
 	}
     
-    @IBAction func addEdit(sender: AnyObject) {
+    @IBAction func addEdit(_ sender: AnyObject) {
 		if editionMode {
             cameraBloqued = true
             changeCamera(false) // No need to change state, we let it to blocked state
             self.animateEdition()
 		} else {
-			self.performSegueWithIdentifier("createShape", sender: self)
+            self.performSegue(withIdentifier: "createShape", sender: self)
 		}
 	}
 	
-	@IBAction func removeBlock(sender: AnyObject) {
+	@IBAction func removeBlock(_ sender: AnyObject) {
 		// create alert controller
         var myAlert : UIAlertController
         
-        if (World.zones[World.selectedZone!].selectedNode?.valueForKey("merged") == nil) {
-             myAlert = UIAlertController(title: "Warning", message: "Are you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.Alert)
+        if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") == nil) {
+            myAlert = UIAlertController(title: "Warning", message: "Are you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.alert)
         } else {
-            myAlert = UIAlertController(title: "Warning", message: "You are trying to delete a merged block. If you delete it, all its children will be deleted.\n\nAre you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.Alert)
+            myAlert = UIAlertController(title: "Warning", message: "You are trying to delete a merged block. If you delete it, all its children will be deleted.\n\nAre you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.alert)
         }
 		// add an "OK" button
-		myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-            if (World.zones[World.selectedZone!].selectedNode?.valueForKey("merged") == nil) { // if not merged
+        myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+            if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") == nil) { // if not merged
                 
-                let index = World.zones[World.selectedZone!].getIndexFromBlock()
-                World.zones[World.selectedZone!].blocks.removeAtIndex(index!)
+                let index = World.zones[World.selectedZone!].getIndex()
+                World.zones[World.selectedZone!].blocks.remove(at: index!)
                 
                 World.zones[World.selectedZone!].removeLinks("blockId", id: World.zones[World.selectedZone!].selectedBlock)
                 
@@ -345,10 +345,10 @@ class GameViewController: UIViewController {
                 
                 for childBlocks : AnyObject in World.zones[World.selectedZone!].selectedNode!.childNodes {
                     let aChildBlock = childBlocks as? SCNNode
-                    let idBlock: Int = aChildBlock!.valueForKey("id") as! Int
+                    let idBlock: Int = aChildBlock!.value(forKey: "id") as! Int
                     
-                    let index = World.zones[World.selectedZone!].getIndexFromBlock(idBlock)
-                    World.zones[World.selectedZone!].blocks.removeAtIndex(index!)
+                    let index = World.zones[World.selectedZone!].getIndex(fromBlock: idBlock)
+                    World.zones[World.selectedZone!].blocks.remove(at: index!)
                 }
                 
             }
@@ -365,9 +365,9 @@ class GameViewController: UIViewController {
             Utils.saveZone()
 		}))
 		// add an "Cancel" button
-		myAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        myAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		// show the alert
-		self.presentViewController(myAlert, animated: true, completion: nil)
+        self.present(myAlert, animated: true, completion: nil)
 	}
     
 	@IBAction func switchCameraMode(sender: AnyObject) {
@@ -382,11 +382,11 @@ class GameViewController: UIViewController {
             World.zones[World.selectedZone!].selectedNode?.rotation = SCNVector4Make(0.0, 1.0, 0.0, angle)
 			let nodeRotation =  World.zones[World.selectedZone!].selectedNode?.rotation
             
-            if (sender.state == UIGestureRecognizerState.Ended){
-                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].rotationX = nodeRotation?.x
-                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].rotationY = nodeRotation?.y
-                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].rotationZ = nodeRotation?.z
-                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].rotationW = nodeRotation?.w
+            if (sender.state == UIGestureRecognizerState.ended){
+                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationX = nodeRotation?.x
+                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationY = nodeRotation?.y
+                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationZ = nodeRotation?.z
+                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationW = nodeRotation?.w
                 Utils.saveZone()
             }
 		} else { //rotating the world
@@ -400,7 +400,7 @@ class GameViewController: UIViewController {
     }
 	
     @IBAction func zoomNodeGesture(sender: UIPinchGestureRecognizer) {
-        if (World.zones[World.selectedZone!].selectedBlock != -1 && cameraBloqued && World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") == nil && !merging) { // if camera is blocked we take control
+        if (World.zones[World.selectedZone!].selectedBlock != -1 && cameraBloqued && World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") == nil && !merging) { // if camera is blocked we take control
 			var scaleIncrement : CGFloat = sender.scale
 			scaleIncrement = (scaleIncrement - 1 )
 			//print("scale \(self.scale) scaleIncrement \(scaleIncrement)")
@@ -411,8 +411,8 @@ class GameViewController: UIViewController {
 
             World.zones[World.selectedZone!].selectedNode?.scale = SCNVector3(x: Float(self.scale), y: Float(self.scale), z: Float(self.scale))
             
-            if (sender.state == UIGestureRecognizerState.Ended){
-                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].scale = Float(self.scale)
+            if (sender.state == UIGestureRecognizerState.ended){
+                World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].scale = Float(self.scale)
                 Utils.saveZone()
             }
         }
@@ -423,29 +423,29 @@ class GameViewController: UIViewController {
             // direction.y => when we go up, it's < 0
             // direction.y => when we go down, it's > 0
             
-            let direction = sender.velocityInView(self.view)
+            let direction = sender.velocity(in: self.view)
             let actualPosition = World.zones[World.selectedZone!].selectedNode?.position
             
             var newX = Float(actualPosition!.x)
             var newY = Float(actualPosition!.y)
             var newZ = Float(actualPosition!.z)
             
-            if (sender.numberOfTouches() == 1) { // one finger touch
+            if (sender.numberOfTouches == 1) { // one finger touch
                 newX = (direction.x == 0) ? newX : Float(actualPosition!.x)+Float(direction.x/100)
                 newY = (direction.y == 0) ? newY : Float(actualPosition!.y)-Float(direction.y/100)
                 
                 // if the newY is behind the the ground, we replace it correctly
                 // BEWARE : direction.y is inversed. By default, natural scroll is used
-                if (World.zones[World.selectedZone!].selectedNode?.valueForKey("merged") == nil) {
+                if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") == nil) {
                     //print("merged move")
-                    if (newY-getDimensionForSelectedNode("y")/2 <= World.zones[World.selectedZone!].getAxisFromGround(false).y && direction.y > 0) {
-                        newY = World.zones[World.selectedZone!].getAxisFromGround(false).y+self.getDimensionForSelectedNode("y")/2
+                    if (newY-getDimensionForSelectedNode("y")/2 <= World.zones[World.selectedZone!].getAxisFromGround(min: false).y && direction.y > 0) {
+                        newY = World.zones[World.selectedZone!].getAxisFromGround(min: false).y+self.getDimensionForSelectedNode("y")/2
                     } else if (newY+getDimensionForSelectedNode("y")/2 >= 50 && direction.y < 0) {
                         newY = 50
                     }
                 } else {
-                    if (newY <= World.zones[World.selectedZone!].getAxisFromGround(false).y-1 && direction.y > 0) {
-                        newY = World.zones[World.selectedZone!].getAxisFromGround(false).y
+                    if (newY <= World.zones[World.selectedZone!].getAxisFromGround(min: false).y-1 && direction.y > 0) {
+                        newY = World.zones[World.selectedZone!].getAxisFromGround(min: false).y
                     } else if (newY >= 50 && direction.y < 0) {
                         newY = 50
                     }
@@ -454,37 +454,37 @@ class GameViewController: UIViewController {
                 // if newX is outside the ground, we replace it correctly
                 if (newX-getDimensionForSelectedNode("x")/2 <= World.zones[World.selectedZone!].getAxisFromGround().x && direction.x < 0) {
                     newX = World.zones[World.selectedZone!].getAxisFromGround().x+self.getDimensionForSelectedNode("x")/2
-                } else if (newX+getDimensionForSelectedNode("y")/2 >= World.zones[World.selectedZone!].getAxisFromGround(false).x && direction.x > 0) {
-                    newX = World.zones[World.selectedZone!].getAxisFromGround(false).x-self.getDimensionForSelectedNode("y")/2
+                } else if (newX+getDimensionForSelectedNode("y")/2 >= World.zones[World.selectedZone!].getAxisFromGround(min: false).x && direction.x > 0) {
+                    newX = World.zones[World.selectedZone!].getAxisFromGround(min: false).x-self.getDimensionForSelectedNode("y")/2
                 }
                 
-            } else if (sender.numberOfTouches() == 2) { // two fingers touch
+            } else if (sender.numberOfTouches == 2) { // two fingers touch
                 
                 newZ = (direction.y == 0) ? newZ : Float(actualPosition!.z)+Float(direction.y/100)
                 
                 //if newZ is outside the ground, we replace it correctly
                 if (newZ-getDimensionForSelectedNode("z")/2 <= World.zones[World.selectedZone!].getAxisFromGround().z && direction.y < 0) {
                     newZ = World.zones[World.selectedZone!].getAxisFromGround().z+self.getDimensionForSelectedNode("z")/2
-                } else if (newZ+getDimensionForSelectedNode("z")/2 >= World.zones[World.selectedZone!].getAxisFromGround(false).z && direction.y > 0) {
-                    newZ = World.zones[World.selectedZone!].getAxisFromGround(false).z-self.getDimensionForSelectedNode("z")/2
+                } else if (newZ+getDimensionForSelectedNode("z")/2 >= World.zones[World.selectedZone!].getAxisFromGround(min: false).z && direction.y > 0) {
+                    newZ = World.zones[World.selectedZone!].getAxisFromGround(min: false).z-self.getDimensionForSelectedNode("z")/2
                 }
             }
             
             World.zones[World.selectedZone!].selectedNode?.position = SCNVector3(x: newX, y: newY, z: newZ)
             
-            if (sender.state == UIGestureRecognizerState.Ended){
-                if (World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") == nil) { // if there's no merged block
-                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].x = newX
-                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].y = newY
-                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].z = newZ
+            if (sender.state == UIGestureRecognizerState.ended){
+                if (World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") == nil) { // if there's no merged block
+                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].x = newX
+                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].y = newY
+                    World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].z = newZ
                 } else { // if block merged, then we apply x,y,z to the children nodes
                     for childBlocks : AnyObject in World.zones[World.selectedZone!].selectedNode!.childNodes {
                         let aChildBlock = childBlocks as? SCNNode
-                        let idBlock: Int = aChildBlock!.valueForKey("id") as! Int
+                        let idBlock: Int = aChildBlock!.value(forKey: "id") as! Int
 
-                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock(idBlock)!].xParent = newX
-                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock(idBlock)!].yParent = newY
-                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock(idBlock)!].zParent = newZ
+                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex(fromBlock: idBlock)!].xParent = newX
+                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex(fromBlock: idBlock)!].yParent = newY
+                        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex(fromBlock: idBlock)!].zParent = newZ
                     }
                 }
                 
@@ -496,42 +496,40 @@ class GameViewController: UIViewController {
 	@IBAction func teleport(sender: AnyObject) {
         let _ : [Int:Int] = World.zones[World.selectedZone!].links
         
-        if ((World.zones[World.selectedZone!].links.values.indexOf(World.zones[World.selectedZone!].selectedBlock)) == nil) { // if a block not yet linked
+        if ((World.zones[World.selectedZone!].links.values.index(of: World.zones[World.selectedZone!].selectedBlock)) == nil) { // if a block not yet linked
             if Teleport.canTeleport() {
                 Teleport.teleportMode = true
                 Teleport.teleportFromBlockId = World.zones[World.selectedZone!].selectedBlock
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             } else {
                 // create alert controller
-                let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "You need to have at least another zone not already linked with this zone, which contains at least one unmerged block and with at least one block not linked. ", preferredStyle: UIAlertControllerStyle.Alert)
+                let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "You need to have at least another zone not already linked with this zone, which contains at least one unmerged block and with at least one block not linked. ", preferredStyle: UIAlertControllerStyle.alert)
                 // add an "OK" button
-                myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 // show the alert
-                self.presentViewController(myAlert, animated: true, completion: nil)
+                self.present(myAlert, animated: true, completion: nil)
             }
         } else {
-            let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "This block is already linked. Would you like to remove its link? ", preferredStyle: UIAlertControllerStyle.Alert)
+            let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "This block is already linked. Would you like to remove its link? ", preferredStyle: UIAlertControllerStyle.alert)
             // add an "OK" button
-            myAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+            myAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
                 // We teleport it
                 World.zones[World.selectedZone!].removeLinks("blockId", id: World.zones[World.selectedZone!].selectedBlock)
             }))
             // add an "Cancel" button
-            myAlert.addAction(UIAlertAction(title: "No", style: .Cancel, handler: nil))
+            myAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
             
             // show the alert
-            self.presentViewController(myAlert, animated: true, completion: nil)
+            self.present(myAlert, animated: true, completion: nil)
         }
 	}
 	
-    func getDimensionForSelectedNode(whatWanted: String, aNode: SCNNode? = nil) -> Float {
+    func getDimensionForSelectedNode(_ whatWanted: String, aNode: SCNNode? = nil) -> Float {
         let theNode = (aNode != nil) ? aNode : World.zones[World.selectedZone!].selectedNode
         
         let scale = theNode!.scale.x
         
-        var min = SCNVector3(x:0, y:0, z:0)
-        var max = SCNVector3(x:0, y:0, z:0)
-        theNode!.getBoundingBoxMin(&min, max:&max)
+        let (min, max) = theNode!.boundingBox
         switch whatWanted{
         case "x":
             return (max.x-min.x)*scale
@@ -544,17 +542,17 @@ class GameViewController: UIViewController {
         }
     }
 	
-    func changeCamera(changeState: Bool = true) {
+    func changeCamera(_ changeState: Bool = true) {
         cameraBloqued = (changeState) ? !cameraBloqued : cameraBloqued
         
         if cameraBloqued {
             // fixed camera
-            cameraButton.setImage(UIImage(named: "cameraOff"), forState: .Normal)
+            cameraButton.setImage(UIImage(named: "cameraOff"), for: .normal)
             scnView.allowsCameraControl = false
             cameraNode = SCNNode()
         } else {
             // free camera
-            cameraButton.setImage(UIImage(named: "cameraOn"), forState: .Normal)
+            cameraButton.setImage(UIImage(named: "cameraOn"), for: .normal)
             scnView.allowsCameraControl = true
            // manageCamera()
         }
@@ -570,13 +568,13 @@ class GameViewController: UIViewController {
     func clearSelectedFace() {
         if (World.zones[World.selectedZone!].selectedNode != nil) {
             SCNTransaction.begin()
-            SCNTransaction.setAnimationDuration(1.5)
-            if (World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") != nil) {
+            SCNTransaction.animationDuration = 1.5
+            if (World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") != nil) {
                 for childBlocks : AnyObject in World.zones[World.selectedZone!].selectedNode!.childNodes {
-                    childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.blackColor()
+                    childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.black
                 }
             } else {
-                World.zones[World.selectedZone!].selectedNode!.geometry!.firstMaterial!.emission.contents = UIColor.blackColor()
+                World.zones[World.selectedZone!].selectedNode!.geometry!.firstMaterial!.emission.contents = UIColor.black
             }
             SCNTransaction.commit()
             World.zones[World.selectedZone!].selectedNode = nil
@@ -590,66 +588,66 @@ class GameViewController: UIViewController {
         let node = block.node
 		World.zones[World.selectedZone!].selectedNode = node
 		World.zones[World.selectedZone!].selectedBlock = World.zones[World.selectedZone!].blocks.last!.id
-        node?.geometry!.firstMaterial!.emission.contents = UIColor.redColor()
+        node?.geometry!.firstMaterial!.emission.contents = UIColor.red
 		node?.scale = SCNVector3Make(5, 5, 5)
-        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndexFromBlock()!].scale = 5
+        World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].scale = 5
         Utils.saveZone()
 		self.scnView.scene!.rootNode.addChildNode(node!)
-        self.counter++
+        self.counter += 1
 	}
 	
-	func handleTap(gestureRecognize: UIGestureRecognizer) {
+	@objc func handleTap(_ gestureRecognize: UIGestureRecognizer) {
         var didTouchNoneBlock = false
         
         if (Teleport.teleportMode) {
             // check what nodes are tapped
-            let p = gestureRecognize.locationInView(scnView)
+            let p = gestureRecognize.location(in: scnView)
             
             let hitResults = scnView.hitTest(p, options: nil)
             // check that we clicked on at least one object
             if hitResults.count > 0 {
                 // retrieved the first clicked object
                 let result: AnyObject! = hitResults[0]
-                let id: Int  = result.node.valueForKey("id") as! Int
+                let id: Int  = result.node.value(forKey: "id") as! Int
                 //print("ID block selected = \(id)")
-                if id != -1 && (result.node.parentNode!.valueForKey("merged")) == nil { // if not bg nor ground nor merged
+                if id != -1 && (result.node.parent!.value(forKey: "merged")) == nil { // if not bg nor ground nor merged
                     World.zones[World.selectedZone!].selectedBlock = id
                     //print("ID block selected = \(id), blockSelected = \(World.zones[World.selectedZone!].selectedBlock)")
                     //link the blocks and dismiss
                     //print(Teleport.teleportMode)
                     Teleport.autoSwitchBackToZone = true
                     Teleport.saveTeleport()
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                } else if ((result.node.parentNode!.valueForKey("merged")) != nil) { // if player chose a merged block
-                    let alert = UIAlertController(title: "Warning", message: "You can't link the zone to a merged block.", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
+                } else if ((result.node.parent!.value(forKey: "merged")) != nil) { // if player chose a merged block
+                    let alert = UIAlertController(title: "Warning", message: "You can't link the zone to a merged block.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
             
         } else {
             // check what nodes are tapped
-            let p = gestureRecognize.locationInView(scnView)
+            let p = gestureRecognize.location(in: scnView)
             let hitResults = scnView.hitTest(p, options: nil)
             // check that we clicked on at least one object
             if hitResults.count > 0 {
                 // retrieved the first clicked object
                 let result: AnyObject! = hitResults[0]
-                let id: Int  = result.node.valueForKey("id") as! Int
+                let id: Int  = result.node.value(forKey: "id") as! Int
                 //print("Id block \(id)")
                 
                 if (!merging) { // we don't merge, we act normally
                     if id != -1 && id != World.zones[World.selectedZone!].selectedBlock {
                         //print(World.zones[World.selectedZone!].links)
                         
-                        if ((World.zones[World.selectedZone!].links.values.indexOf(id)) != nil) { // we find out if it's a teleport or not                                 let index = find(World.zones[World.selectedZone!].links.values, id)
+                        if ((World.zones[World.selectedZone!].links.values.index(of: id)) != nil) { // we find out if it's a teleport or not                                 let index = find(World.zones[World.selectedZone!].links.values, id)
                         
                             self.doYouWantToTeleport(id)
                         }
 
                         self.clearSelectedFace()
                         
-                        SCNTransaction.setAnimationDuration(0.5)
+                        SCNTransaction.animationDuration = 0.5
                         self.editionOpened = true
                         self.editionMode = false
                         // highlight it
@@ -658,18 +656,18 @@ class GameViewController: UIViewController {
                         showHideEdition()
                         self.changeCamera(self.cameraBloqued ? true : false)
 
-                        if ((result.node.parentNode!.valueForKey("merged")) != nil) { // if we are on a block merged
+                        if ((result.node.parent!.value(forKey: "merged")) != nil) { // if we are on a block merged
                             //print("merged node")
                             
-                            World.zones[World.selectedZone!].selectedNode = result.node.parentNode! as SCNNode
+                            World.zones[World.selectedZone!].selectedNode = result.node.parent! as SCNNode
                             
-                            for childBlocks : AnyObject in result.node.parentNode!.childNodes {
-                                childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.redColor()
+                            for childBlocks : AnyObject in result.node.parent!.childNodes {
+                                childBlocks.geometry!!.firstMaterial!.emission.contents = UIColor.red
                             }
                             
                         } else {
                             let material = result.node!.geometry!.firstMaterial!
-                            let emission = self.editionMode ? UIColor.redColor() : UIColor.blackColor()
+                            let emission = self.editionMode ? UIColor.red : UIColor.black
                             material.emission.contents = emission
                             World.zones[World.selectedZone!].selectedNode = result.node as SCNNode
                         }
@@ -686,33 +684,33 @@ class GameViewController: UIViewController {
                 } else { // we merge !
                  
                     if (id != -1) {
-                        if (result.node!.parentNode!.valueForKey("merged") == nil) { // If isn't a merged block
+                        if (result.node!.parent!.value(forKey: "merged") == nil) { // If isn't a merged block
                             
                             var removeIndex = -1
                             
                             for i in 0..<self.mergingNodes.count {
-                                let nodeId = self.mergingNodes[i].valueForKey("id") as! Int
+                                let nodeId = self.mergingNodes[i].value(forKey: "id") as! Int
 
                                 if nodeId == id { // if we touch an already selected block, we unselect it
-                                    result.node!.geometry!.firstMaterial!.emission.contents = UIColor.blackColor()
+                                    result.node!.geometry!.firstMaterial!.emission.contents = UIColor.black
                                     removeIndex = i
                                 }
                             }
                             
                             if (removeIndex == -1) { // if it's not a block already selected
-                                result.node!.geometry!.firstMaterial!.emission.contents = UIColor.redColor()
+                                result.node!.geometry!.firstMaterial!.emission.contents = UIColor.red
                                 self.mergingNodes.append(result.node!)
                             } else { // otherwise, we remove the block of the table
-                                self.mergingNodes.removeAtIndex(removeIndex)
+                                self.mergingNodes.remove(at: removeIndex)
                             }
                             
                             //print(mergingNodes)
                             
                         } else { // If we are on a merged block
                             
-                            let alert = UIAlertController(title: "Warning", message: "This block is already merged. You can't merge it.", preferredStyle: UIAlertControllerStyle.Alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-                            self.presentViewController(alert, animated: true, completion: nil)
+                            let alert = UIAlertController(title: "Warning", message: "This block is already merged. You can't merge it.", preferredStyle: UIAlertControllerStyle.alert)
+                            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
                             
                         }
                     }
@@ -741,7 +739,7 @@ class GameViewController: UIViewController {
             }
         }
 
-    func doYouWantToTeleport(idBlock: Int) {
+    func doYouWantToTeleport(_ idBlock: Int) {
         let array : [Int:Int] = World.zones[World.selectedZone!].links
         //print(World.zones[World.selectedZone!].links)
         var idZoneToTeleport : Int = -1
@@ -752,50 +750,50 @@ class GameViewController: UIViewController {
             }
         }
         
-        let myAlert = UIAlertController(title: "Teleportation", message: "Would you like to teleport you in \"\(World.zones[idZoneToTeleport].name)\"?", preferredStyle: UIAlertControllerStyle.Alert)
+        let myAlert = UIAlertController(title: "Teleportation", message: "Would you like to teleport you in \"\(World.zones[idZoneToTeleport].name)\"?", preferredStyle: UIAlertControllerStyle.alert)
         
         // add an "OK" button
-        myAlert.addAction(UIAlertAction(title: "Go", style: .Default, handler: { (action) -> Void in
+        myAlert.addAction(UIAlertAction(title: "Go", style: .default, handler: { (action) -> Void in
             // We teleport it
             World.teleportingZoneId = idZoneToTeleport
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }))
         // add an "Cancel" button
-        myAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        myAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         // show the alert
-        self.presentViewController(myAlert, animated: true, completion: nil)
+        self.present(myAlert, animated: true, completion: nil)
     }
 	
 	func animateEdition(){
 		if editionOpened {
 			editionOpened = false
-			addEditButton.setImage(UIImage(named: "edit1"), forState: .Normal)
+			addEditButton.setImage(UIImage(named: "edit1"), for: .normal)
 			//print("closing edition")
 			hideEditButtons(true)
-            cameraButton.hidden = true
+            cameraButton.isHidden = true
             changeCamera()
 		} else {
             editionOpened = true
-            cameraButton.hidden = false
-			addEditButton.setImage(UIImage(named: "edit2"), forState: .Normal)
+            cameraButton.isHidden = false
+			addEditButton.setImage(UIImage(named: "edit2"), for: .normal)
 			//print("opening edition")
 			
-            self.colorButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y)
-			self.teleportButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y)
-			self.infoButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y)
-			self.unmergeButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y)
-            self.mergeButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y)
+            self.colorButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y)
+            self.teleportButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y)
+            self.infoButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y)
+            self.unmergeButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y)
+            self.mergeButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y)
             
 			hideEditButtons(false)
-			UIView.animateWithDuration(0.3, animations: {
-                if (World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") != nil) { // if mergig, we display two buttons
-                    self.infoButton.center = CGPointMake(self.addEditButton.center.x+38, self.addEditButton.center.y)
-                    self.unmergeButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y-38)
+			UIView.animate(withDuration: 0.3, animations: {
+                if (World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") != nil) { // if mergig, we display two buttons
+					self.infoButton.center = CGPoint(x: self.addEditButton.center.x+38, y: self.addEditButton.center.y)
+					self.unmergeButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y-38)
                 } else {
-                    self.mergeButton.center = CGPointMake(self.addEditButton.center.x, self.addEditButton.center.y-38)
-                    self.infoButton.center = CGPointMake(self.addEditButton.center.x + 38, self.addEditButton.center.y)
-                    self.colorButton.center = CGPointMake(self.addEditButton.center.x + 79, self.addEditButton.center.y)
-                    self.teleportButton.center = CGPointMake(self.addEditButton.center.x + 117, self.addEditButton.center.y)
+                    self.mergeButton.center = CGPoint(x: self.addEditButton.center.x, y: self.addEditButton.center.y-38)
+                    self.infoButton.center = CGPoint(x: self.addEditButton.center.x + 38, y: self.addEditButton.center.y)
+                    self.colorButton.center = CGPoint(x: self.addEditButton.center.x + 79, y: self.addEditButton.center.y)
+                    self.teleportButton.center = CGPoint(x: self.addEditButton.center.x + 117, y: self.addEditButton.center.y)
                 }
 				
 			})
@@ -807,65 +805,65 @@ class GameViewController: UIViewController {
 		if editionMode {
 			editionMode = false
 			//print("addMode")
-			addEditButton.setImage(UIImage(named: "add"), forState: .Normal)
-			trashButton.hidden = true
-			cameraButton.hidden = true
+			addEditButton.setImage(UIImage(named: "add"), for: .normal)
+			trashButton.isHidden = true
+			cameraButton.isHidden = true
 		} else {
 			editionMode = true
 			//print("editMode")
-			addEditButton.setImage(UIImage(named: "edit1"), forState: .Normal)
-			trashButton.hidden = false
+			addEditButton.setImage(UIImage(named: "edit1"), for: .normal)
+			trashButton.isHidden = false
 		}
 	}
 	
-    func hideButtons(hideAll : Bool = false){
-		mergeButton.hidden = true
-		colorButton.hidden = true
-		teleportButton.hidden = true
-		infoButton.hidden = true
-		unmergeButton.hidden = true
-		trashButton.hidden = true
-		cameraButton.hidden = true
+    func hideButtons(_ hideAll : Bool = false){
+		mergeButton.isHidden = true
+		colorButton.isHidden = true
+		teleportButton.isHidden = true
+		infoButton.isHidden = true
+		unmergeButton.isHidden = true
+		trashButton.isHidden = true
+		cameraButton.isHidden = true
         
-        addEditButton.hidden = hideAll
+        addEditButton.isHidden = hideAll
 	}
     
-    func showMergeButton(show: Bool) {
+    func showMergeButton(_ show: Bool) {
         if (show) {
             hideButtons(true)
-            okMergeButton.hidden = false
-            cancelMergeButton.hidden = false
+            okMergeButton.isHidden = false
+            cancelMergeButton.isHidden = false
             
             merging = true // merging mode
         } else {
             clearSelectedFace()
             hideButtons()
-            okMergeButton.hidden = true
-            cancelMergeButton.hidden = true
+            okMergeButton.isHidden = true
+            cancelMergeButton.isHidden = true
             
             merging = false // not merging mode
         }
     }
 	
-	func hideEditButtons(bool: Bool){
-        if (World.zones[World.selectedZone!].selectedNode != nil && World.zones[World.selectedZone!].selectedNode!.valueForKey("merged") != nil) { // Si merged
-            unmergeButton.hidden = bool
+	func hideEditButtons(_ bool: Bool){
+        if (World.zones[World.selectedZone!].selectedNode != nil && World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") != nil) { // Si merged
+            unmergeButton.isHidden = bool
         } else {
-            mergeButton.hidden = bool
-            colorButton.hidden = bool
-            teleportButton.hidden = bool
+            mergeButton.isHidden = bool
+            colorButton.isHidden = bool
+            teleportButton.isHidden = bool
         }
         
         if (bool) {
-            unmergeButton.hidden = bool
+            unmergeButton.isHidden = bool
         }
         
-        infoButton.hidden = bool
+        infoButton.isHidden = bool
 	}
 	
-	func hideTeleportMode(bool: Bool){
-		self.elementaryButton.hidden = bool
-		self.addEditButton.hidden = bool
+	func hideTeleportMode(_ bool: Bool){
+		self.elementaryButton.isHidden = bool
+		self.addEditButton.isHidden = bool
 	}
 	
 }

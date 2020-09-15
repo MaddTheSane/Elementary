@@ -31,24 +31,24 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 	override func viewDidLoad() {
 		preview.allowsCameraControl = true
 		super.viewDidLoad()
-		threeDcontainer.hidden = false
-		twoDcontainer.hidden = true
+		threeDcontainer.isHidden = false
+		twoDcontainer.isHidden = true
 		self.tabs.selectedSegmentIndex = 1
 		
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		self.modifyPreviewZone(self.threeDcollectionView)
 	}
 	
-	@IBAction func dismiss(sender: AnyObject) {
-		self.dismissViewControllerAnimated(true, completion: nil)
+	@IBAction func dismiss(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
 	}
 	
 	@IBAction func createBlock(sender: AnyObject) {
 		
         // we create the block
-        World.zones[World.selectedZone!].counter++
+        World.zones[World.selectedZone!].counter += 1
         let newBlock = Block(id: World.zones[World.selectedZone!].counter, texture: "addWorld", red: 0, green: 0, blue: 0, x: 0, y: 5, z: 0, shape: self.geometryNode)
         World.zones[World.selectedZone!].blocks.append(newBlock)
         
@@ -56,19 +56,19 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
         Utils.saveHome() // to save the counter
         Utils.saveZone() // to save the zone
 
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
 	}
 	
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		self.view.endEditing(true)
 		return false
 	}
 	
-	func modifyPreviewZone(collectionView: UICollectionView){
+	func modifyPreviewZone(_ collectionView: UICollectionView){
 		self.previewNode.removeFromParentNode()
 		if (collectionView == self.twoDcollectionView){
 			isThreeDshape = false
@@ -78,7 +78,7 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 			isThreeDshape = true
 		}
 		self.previewNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "addWorld")
-		self.previewNode.runAction(SCNAction.repeatActionForever(SCNAction.rotateByX(1, y: 2, z: 3, duration: 10)))
+        self.previewNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 1, y: 2, z: 3, duration: 10)))
 		self.previewScene.rootNode.addChildNode(previewNode)
 		self.preview.scene = previewScene
 
@@ -189,7 +189,7 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 		}
 	}
 
-	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if (collectionView == self.twoDcollectionView){
 			return shapesTwoD.count
 		} else {
@@ -197,15 +197,15 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 		}
 	}
 	
-	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if (collectionView == self.twoDcollectionView){
-			let cell = collectionView.dequeueReusableCellWithReuseIdentifier("textureCell", forIndexPath: indexPath) as! UICollectionViewCellImage
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "textureCell", for: indexPath) as! UICollectionViewCellImage
 			let image = UIImage(named: shapesTwoD[indexPath.row])
 			cell.imgView.image = image
 			// Configure the cell
 			return cell
 		} else {
-			let cell = collectionView.dequeueReusableCellWithReuseIdentifier("textureCell", forIndexPath: indexPath) as! UICollectionViewCellImage
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "textureCell", for: indexPath) as! UICollectionViewCellImage
 			let image = UIImage(named: shapesThreeD[indexPath.row])
 			cell.imgView.image = image
 			// Configure the cell
@@ -214,7 +214,7 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 		
 	}
 	
-	func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+	func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
 		self.selectedShape = (indexPath.row)
 		//print(selectedShape)
 		self.modifyPreviewZone(collectionView)
@@ -225,11 +225,11 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 		
 		switch sender.selectedSegmentIndex {
 		case 0:
-			threeDcontainer.hidden = true
-			twoDcontainer.hidden = false
+			threeDcontainer.isHidden = true
+			twoDcontainer.isHidden = false
 		case 1:
-			threeDcontainer.hidden = false
-			twoDcontainer.hidden = true
+			threeDcontainer.isHidden = false
+			twoDcontainer.isHidden = true
 		default :
 			break
 		}
