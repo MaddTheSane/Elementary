@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "trapèze.png"
+      "filename" : "trapeze.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
