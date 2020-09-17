@@ -6,7 +6,11 @@
 //  Copyright (c) 2015 Supinfo. All rights reserved.
 //
 
+#if os(macOS)
+import Cocoa
+#else
 import UIKit
+#endif
 import SceneKit
 
 

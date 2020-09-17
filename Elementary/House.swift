@@ -5,24 +5,24 @@ class House {
     
     class func cube() -> SCNGeometry {
         let cube = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
-        cube.firstMaterial?.diffuse.contents = UIColor.yellow
-        cube.firstMaterial?.specular.contents = UIColor.white
+        cube.firstMaterial?.diffuse.contents = SCNColor.yellow
+        cube.firstMaterial?.specular.contents = SCNColor.white
         
         return cube
     }
     
     class func pyramid() -> SCNGeometry {
         let pyramid = SCNPyramid(width: 3, height: 2, length: 3)
-        pyramid.firstMaterial?.diffuse.contents = UIColor.red
-        pyramid.firstMaterial?.specular.contents = UIColor.white
+        pyramid.firstMaterial?.diffuse.contents = SCNColor.red
+        pyramid.firstMaterial?.specular.contents = SCNColor.white
         
         return pyramid
     }
     
     class func door() -> SCNGeometry {
         let door = SCNBox(width: 0.5, height: 1, length: 0.1, chamferRadius: 0.01)
-        door.firstMaterial?.diffuse.contents = UIColor.brown
-        door.firstMaterial?.specular.contents = UIColor.white
+        door.firstMaterial?.diffuse.contents = SCNColor.brown
+        door.firstMaterial?.specular.contents = SCNColor.white
         
         return door
     }
@@ -30,16 +30,16 @@ class House {
     
     class func cheminee() -> SCNGeometry {
         let cheminee = SCNBox(width: 0.25, height: 1, length: 0.25, chamferRadius: 0.05)
-        cheminee.firstMaterial?.diffuse.contents = UIColor.darkGray
-        cheminee.firstMaterial?.specular.contents = UIColor.white
+        cheminee.firstMaterial?.diffuse.contents = SCNColor.darkGray
+        cheminee.firstMaterial?.specular.contents = SCNColor.white
         
         return cheminee
     }
     
     class func window() -> SCNGeometry {
         let window = SCNBox(width: 0.5, height: 0.5, length: 0.1, chamferRadius: 0.01)
-        window.firstMaterial?.diffuse.contents = UIColor.blue
-        window.firstMaterial?.specular.contents = UIColor.white
+        window.firstMaterial?.diffuse.contents = SCNColor.blue
+        window.firstMaterial?.specular.contents = SCNColor.white
         
         return window
     }

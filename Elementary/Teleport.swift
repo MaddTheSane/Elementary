@@ -6,7 +6,11 @@
 //  Copyright (c) 2015 Supinfo. All rights reserved.
 //
 
+#if os(macOS)
+import Cocoa
+#else
 import UIKit
+#endif
 
 class Teleport {
 	static var teleportMode: Bool = false
@@ -17,8 +21,8 @@ class Teleport {
 	
 	//TODO : imbriquer checkTeleport pour une zone DANS canTeleport pour éviter redondance ET vérifiez les conditions MERGE (empêchant le linking) ET zone destination déjà linkée à la zone source (pour l'instant on ne vérifie que si la zone n'est pas vierge, contient des blocs, et que le nombres de liens est différent du nombres de blocs pour qu'il y ait des blocs disponibles, OR ils peuvent être disponibles mais non compatible à la téléportation si mergés ou si zone Destination déjà linkée à la zone Source)
 	
+    /// check if the rules of teleportation are OK
 	static func checkTeleport() -> Bool {
-		// check if the rules of teleportation are OK
 		if teleportTo == teleportFrom || World.zones[teleportTo].empty == true {
 			return false
 		} else {
@@ -48,15 +52,15 @@ class Teleport {
 		}
 	}
 	
+    /// check if teleportation is available
 	static func canTeleport() -> Bool {
-		// check if teleportation is available
 		teleportFrom = World.selectedZone!
         
 		var answer = false
 		for zone in World.zones {
             let arrayLinks : [Int:Int]? = zone.links
             
-            if zone.id != teleportFrom && arrayLinks!.keys.index(of: teleportFrom) == nil { // Zone not itself or not linked
+            if zone.id != teleportFrom && arrayLinks!.keys.firstIndex(of: teleportFrom) == nil { // Zone not itself or not linked
                 let blocksLoaded = Utils.loadZone(zone.id)
                 
                 if blocksLoaded != nil { // Saved (and loaded) blocks
@@ -89,8 +93,8 @@ class Teleport {
 		return answer
 	}
 	
+    /// we save the teleport link
 	static func saveTeleport() {
-		// we save the teleport link
 		World.zones[teleportFrom].links[teleportTo] = Teleport.teleportFromBlockId
 		World.zones[teleportTo].links[teleportFrom] = World.zones[teleportTo].selectedBlock
 		Utils.saveHome()

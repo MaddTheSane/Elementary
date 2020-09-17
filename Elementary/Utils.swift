@@ -6,7 +6,11 @@
 //  Copyright (c) 2015 Supinfo. All rights reserved.
 //
 
+#if os(macOS)
+import Cocoa
+#else
 import UIKit
+#endif
 import SceneKit
 //let PI: Float = Float(M_PI)
 var path: String = ""
@@ -16,12 +20,12 @@ var colorChanged: Bool = false
 class Utils {
 	
 	private class func documentsDirectory() -> String {
-		let documentsFolderPath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+		let documentsFolderPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
 		return documentsFolderPath
 	}
 	
 	private class func fileInDocumentsDirectory(_ filename: String) -> String {
-		return documentsDirectory() + filename
+        return (documentsDirectory() as NSString).appendingPathComponent(filename)
 	}
 	
 	private class func getPath(_ id: Int) {

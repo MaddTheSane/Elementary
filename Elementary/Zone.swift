@@ -6,7 +6,11 @@
 //  Copyright (c) 2015 Supinfo. All rights reserved.
 //
 
+#if os(macOS)
+import Cocoa
+#else
 import UIKit
+#endif
 import SceneKit
 
 class Zone : NSObject, NSCoding {
@@ -41,14 +45,14 @@ class Zone : NSObject, NSCoding {
 	
 	func buildZone(){
 		let square = SCNBox(width: 1, height: 1, length: 0.00001, chamferRadius: 0.0)
-		square.firstMaterial?.specular.contents = UIColor.white
+		square.firstMaterial?.specular.contents = SCNColor.white
 		self.node = SCNNode(geometry: square)
 		self.setTexture(self.texture, red: self.red, green: self.green, blue: self.blue)
 	}
 	
 	func buildGround() {
 		let ground = SCNBox(width: 100, height: 1, length: 100, chamferRadius: 0.0)
-		ground.firstMaterial?.specular.contents = UIColor.white
+		ground.firstMaterial?.specular.contents = SCNColor.white
 		self.ground = SCNNode(geometry: ground)
 		self.setTextureGround(self.texture, red: self.red, green: self.green, blue: self.blue)
 		self.ground.setValue(-1, forKey: "id")
@@ -72,7 +76,7 @@ class Zone : NSObject, NSCoding {
                 
             } else { // if the block is merged
                 
-                if blocksMerged.index(of: self.blocks[i].id) == nil { // if we didn't already used it (merged)
+                if blocksMerged.firstIndex(of: self.blocks[i].id) == nil { // if we didn't already used it (merged)
                     
                     let parentNode = SCNNode() // parent node
                     parentNode.setValue(true, forKey: "merged")
@@ -80,7 +84,7 @@ class Zone : NSObject, NSCoding {
                     parentNode.addChildNode(self.blocks[i].node!)
                     
                     for thisBlock: Block in self.blocks {
-                        if self.blocks[i].merge.index(of: thisBlock.id) != nil { // if we are on a block to merge
+                        if self.blocks[i].merge.firstIndex(of: thisBlock.id) != nil { // if we are on a block to merge
                             
                             //print("we merged a block \(thisBlock.id)")
                             thisBlock.buildBlock() // we build a block
@@ -91,7 +95,7 @@ class Zone : NSObject, NSCoding {
                     }
                     
                     blocksMerged.append(self.blocks[i].id)
-                    parentNode.position = SCNVector3(x: self.blocks[i].xParent, y: self.blocks[i].yParent, z: self.blocks[i].zParent)
+                    parentNode.position = SCNVector3(x: CGFloat(self.blocks[i].xParent), y: CGFloat(self.blocks[i].yParent), z: CGFloat(self.blocks[i].zParent))
                     allBlocksNode.addChildNode(parentNode)
                 }
                 
@@ -111,7 +115,7 @@ class Zone : NSObject, NSCoding {
         
         for block: Block in World.zones[World.selectedZone!].blocks {
 			if block.id == idBlockFind {
-				return World.zones[World.selectedZone!].blocks.index(of: block)!
+                return World.zones[World.selectedZone!].blocks.firstIndex(of: block)!
 			}
 		}
 		return nil
@@ -124,11 +128,11 @@ class Zone : NSObject, NSCoding {
 			self.red = red
 			self.green = green
 			self.blue = blue
-			self.ground.geometry?.firstMaterial?.diffuse.contents = UIColor(red: red, green: green, blue: blue, alpha: 1)
+			self.ground.geometry?.firstMaterial?.diffuse.contents = SCNColor(red: red, green: green, blue: blue, alpha: 1)
 		} else {
 			self.textured = true
 			self.texture = texture!
-			self.ground.geometry?.firstMaterial?.diffuse.contents = UIImage(named: self.texture!)
+			self.ground.geometry?.firstMaterial?.diffuse.contents = SCNImage(named: self.texture!)
 		}
 	}
 	
@@ -139,11 +143,11 @@ class Zone : NSObject, NSCoding {
 			self.red = red
 			self.green = green
 			self.blue = blue
-			self.node.geometry?.firstMaterial?.diffuse.contents = UIColor(red: red, green: green, blue: blue, alpha: 1)
+			self.node.geometry?.firstMaterial?.diffuse.contents = SCNColor(red: red, green: green, blue: blue, alpha: 1)
 		} else {
 			self.textured = true
 			self.texture = texture!
-			self.node.geometry?.firstMaterial?.diffuse.contents = UIImage(named: self.texture!)
+			self.node.geometry?.firstMaterial?.diffuse.contents = SCNImage(named: self.texture!)
 		}
 	}
 	

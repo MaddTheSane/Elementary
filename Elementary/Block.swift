@@ -6,7 +6,11 @@
 //  Copyright (c) 2015 Supinfo. All rights reserved.
 //
 
+#if os(macOS)
+import Cocoa
+#else
 import UIKit
+#endif
 import SceneKit
 
 class Block : NSObject, NSCoding {
@@ -51,13 +55,13 @@ class Block : NSObject, NSCoding {
         
 		
 		let node = SCNNode(geometry: self.shape)
-		node.geometry!.firstMaterial!.emission.contents = UIColor.black
+		node.geometry!.firstMaterial!.emission.contents = SCNColor.black
         node.setValue(self.id, forKey: "id")
-		node.position = SCNVector3Make(self.x, self.y, self.z)
-        node.scale = SCNVector3Make(self.scale, self.scale, self.scale)
+        node.position = SCNVector3Make(CGFloat(self.x), CGFloat(self.y), CGFloat(self.z))
+        node.scale = SCNVector3Make(CGFloat(self.scale), CGFloat(self.scale), CGFloat(self.scale))
         
         if (self.rotationW != nil) {
-            node.rotation = SCNVector4(x: self.rotationX!, y: self.rotationY!, z: self.rotationZ!, w: self.rotationW!)
+            node.rotation = SCNVector4(x: CGFloat(self.rotationX!), y: CGFloat(self.rotationY!), z: CGFloat(self.rotationZ!), w: CGFloat(self.rotationW!))
         }
         
 		self.node = node
@@ -69,12 +73,12 @@ class Block : NSObject, NSCoding {
 			self.green = green
 			self.blue = blue
 			//print("mode color red = \(self.red) green = \(self.green) blue = \(self.blue)")
-			let color = UIColor(red: self.red, green: self.green, blue: self.blue, alpha: 1)
+			let color = SCNColor(red: self.red, green: self.green, blue: self.blue, alpha: 1)
 			self.node?.geometry?.firstMaterial?.diffuse.contents = color
 		} else {
 			//print("mode texture")
 			self.texture = texture!
-			self.node?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: self.texture!)
+			self.node?.geometry?.firstMaterial?.diffuse.contents = SCNImage(named: self.texture!)
 		}
 	}
     
