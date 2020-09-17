@@ -25,18 +25,18 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		let swipeDown = UISwipeGestureRecognizer(target: self, action: "swiped:")
-        swipeDown.direction = UISwipeGestureRecognizerDirection.down
+		let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(SettingsViewController.swiped(_:)))
+        swipeDown.direction = UISwipeGestureRecognizer.Direction.down
 		self.view.addGestureRecognizer(swipeDown)
 		let _ :UIViewController! = self.presentingViewController
     }
 	
-	func swiped(_ gesture : UIGestureRecognizer) {
+	@objc func swiped(_ gesture : UIGestureRecognizer) {
 		if let swipeGesture = gesture as? UISwipeGestureRecognizer {
 			
 			switch swipeGesture.direction {
 
-            case UISwipeGestureRecognizerDirection.down:
+            case UISwipeGestureRecognizer.Direction.down:
                 self.dismiss(animated: true, completion: nil)
 				
 			default:
@@ -55,7 +55,7 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
 	
 	@IBAction func resetGame(_ sender: AnyObject) {
 		// create alert controller
-        let myAlert = UIAlertController(title: "Warning", message: "Are you sure to reset Elementary? Everything will be lost.", preferredStyle: UIAlertControllerStyle.alert)
+        let myAlert = UIAlertController(title: "Warning", message: "Are you sure to reset Elementary? Everything will be lost.", preferredStyle: UIAlertController.Style.alert)
 		// add an "OK" button
         myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
 			for zone in World.zones {

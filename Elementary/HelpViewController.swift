@@ -45,17 +45,17 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
 		//swipe
 		//PageControl Swipe
 		let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight.direction = .right
 		swipeRight.numberOfTouchesRequired = 1
 		self.view.addGestureRecognizer(swipeRight)
 		
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        swipeLeft.direction = .left
 		swipeLeft.numberOfTouchesRequired = 1
 		self.view.addGestureRecognizer(swipeLeft)
 		//dismiss
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(HelpViewController.respondTo(swipe:)))
-        swipeDown.direction = UISwipeGestureRecognizerDirection.down
+        swipeDown.direction = .down
 		self.view.addGestureRecognizer(swipeDown)
   }
   
@@ -67,11 +67,11 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
 
 		if let swipeGesture = gesture as? UISwipeGestureRecognizer {
 			switch swipeGesture.direction {
-			case UISwipeGestureRecognizerDirection.right:
+            case UISwipeGestureRecognizer.Direction.right:
 				indexPage -= 1
-			case UISwipeGestureRecognizerDirection.left:
+            case UISwipeGestureRecognizer.Direction.left:
 				indexPage += 1
-			case UISwipeGestureRecognizerDirection.down:
+            case UISwipeGestureRecognizer.Direction.down:
                 self.dismiss(animated: true, completion: nil)
 				
 			default:

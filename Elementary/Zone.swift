@@ -95,7 +95,7 @@ class Zone : NSObject, NSCoding {
                     }
                     
                     blocksMerged.append(self.blocks[i].id)
-                    parentNode.position = SCNVector3(x: CGFloat(self.blocks[i].xParent), y: CGFloat(self.blocks[i].yParent), z: CGFloat(self.blocks[i].zParent))
+                    parentNode.position = SCNVector3(self.blocks[i].xParent, self.blocks[i].yParent, self.blocks[i].zParent)
                     allBlocksNode.addChildNode(parentNode)
                 }
                 

@@ -68,7 +68,7 @@ class WorldViewController: UIViewController {
             self.setNodePosition(World.teleportingZoneId)
             World.selectedZone = World.teleportingZoneId
             
-            _ = Timer.scheduledTimer(timeInterval: 1.3, target: self, selector: Selector("goToTeleportingZone"), userInfo: nil, repeats: false)
+            _ = Timer.scheduledTimer(timeInterval: 1.3, target: self, selector: #selector(WorldViewController.goToTeleportingZone), userInfo: nil, repeats: false)
             World.teleportingZoneId = -1
             SCNTransaction.commit()
             
@@ -83,11 +83,11 @@ class WorldViewController: UIViewController {
 				self.areaName.text = World.zones[World.selectedZone!].name
 				if World.zones[World.selectedZone!].empty == true {
 					self.hideButtons(true)
-                    self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: UIControlState.normal)
+                    self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: .normal)
                     self.areaName.isHidden = true
                     self.goToZoneOutlet.isHidden = false
 				} else {
-                    self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: UIControlState.normal)
+                    self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: .normal)
 					self.hideButtons(false)
                     self.areaName.isHidden = false
                     self.goToZoneOutlet.isHidden = false
@@ -121,7 +121,7 @@ class WorldViewController: UIViewController {
 	
 	@IBAction func removeSelectedZone(sender: AnyObject) {
 		// create alert controller
-        let myAlert = UIAlertController(title: "Warning!", message: "Are you sure to delete \(World.zones[World.selectedZone!].name)? All the data inside the zone will be lost.", preferredStyle: UIAlertControllerStyle.alert)
+        let myAlert = UIAlertController(title: "Warning!", message: "Are you sure to delete \(World.zones[World.selectedZone!].name)? All the data inside the zone will be lost.", preferredStyle: .alert)
 		// add an "OK" button
         myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
 			World.zones[World.selectedZone!].removeZone()
@@ -187,11 +187,11 @@ class WorldViewController: UIViewController {
 		world.backgroundColor = UIColor(white: 0, alpha: 0)
 		
 		// add a pan gesture recognizer
-		let panRecognizer = UIPanGestureRecognizer(target: self, action: "panGesture:")
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(WorldViewController.panGesture(_:)))
 		world.addGestureRecognizer(panRecognizer)
 
 		// add a tap gesture recognizer
-		let tapGesture = UITapGestureRecognizer(target: self, action: "handleTap:")
+		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(WorldViewController.handleTap(_:)))
 		var gestureRecognizers = [UIGestureRecognizer]()
 		gestureRecognizers.append(tapGesture)
 		if let existingGestureRecognizers = world.gestureRecognizers {
@@ -249,7 +249,7 @@ class WorldViewController: UIViewController {
 		worldNode.transform = SCNMatrix4MakeRotation(newAngle, yProportion, xProportion, 0)
 		self.worldNode.removeAction(forKey: "rotation")
 
-        if (sender.state == UIGestureRecognizerState.ended){
+        if (sender.state == .ended){
 			currentAngle = newAngle
 		}
 	}
@@ -296,8 +296,8 @@ class WorldViewController: UIViewController {
             if Teleport.teleportMode {
                 let arrayLinks : [Int:Int]? = World.zones[id].links
                 
-                if (arrayLinks!.keys.index(of: Teleport.teleportFrom) != nil) { // Zone already linked
-                    let alert = UIAlertController(title: "Warning", message: "This zone is already linked with the previous.\nYou can link zones between themselves only once.", preferredStyle: UIAlertControllerStyle.alert)
+                if (arrayLinks!.keys.firstIndex(of: Teleport.teleportFrom) != nil) { // Zone already linked
+                    let alert = UIAlertController(title: "Warning", message: "This zone is already linked with the previous.\nYou can link zones between themselves only once.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     
@@ -322,11 +322,11 @@ class WorldViewController: UIViewController {
                     self.areaName.text = World.zones[World.selectedZone!].name
                     if World.zones[World.selectedZone!].empty == true {
                         self.hideButtons(true)
-                        self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: UIControlState.normal)
+                        self.goToZoneOutlet.setTitle("Touch here to create a new zone", for: .normal)
                         self.areaName.isHidden = true
                         self.goToZoneOutlet.isHidden = false
                     } else {
-                        self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: UIControlState.normal)
+                        self.goToZoneOutlet.setTitle("Touch here to enter in \(World.zones[World.selectedZone!].name)", for: .normal)
                         self.hideButtons(false)
                     }
                     SCNTransaction.commit()

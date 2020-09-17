@@ -68,7 +68,7 @@ class GameViewController: UIViewController {
 		if (Teleport.teleportMode){
 			self.hideTeleportMode(true)
 			// create alert controller
-            let myAlert = UIAlertController(title: "Teleportation", message: "Now just choose the block you want to link with.\nPlease note that you can't link with a merged block.", preferredStyle: UIAlertControllerStyle.alert)
+            let myAlert = UIAlertController(title: "Teleportation", message: "Now just choose the block you want to link with.\nPlease note that you can't link with a merged block.", preferredStyle: .alert)
 			// add an "Got it!" button
             myAlert.addAction(UIAlertAction(title: "Got it", style: .default, handler: nil))
 			// show the alert
@@ -143,7 +143,7 @@ class GameViewController: UIViewController {
             
         } else { // Only one block
             
-            let alert = UIAlertController(title: "Warning", message: "Please select more than one block to merge.", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Warning", message: "Please select more than one block to merge.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             
@@ -155,7 +155,7 @@ class GameViewController: UIViewController {
         
         let msg = "You can now select all the objects you want to merge.\n\nTouch OK to merge the selected objects or the red cross to cancel."
         
-        let alert = UIAlertController(title: "Merging", message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Merging", message: msg, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Got it", style: .default, handler: { (action) -> Void in
             self.showMergeButton(true)
@@ -175,7 +175,7 @@ class GameViewController: UIViewController {
     @IBAction func unmergeButtonClick(sender: AnyObject) {
         if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") != nil) {
             // create alert controller
-            let myAlert = UIAlertController(title: "Warning", message: "Are you sure to unmerge these blocks?", preferredStyle: UIAlertControllerStyle.alert)
+            let myAlert = UIAlertController(title: "Warning", message: "Are you sure to unmerge these blocks?", preferredStyle: .alert)
             // add an "OK" button
             myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
                 for childBlocks : AnyObject in World.zones[World.selectedZone!].selectedNode!.childNodes {
@@ -236,8 +236,8 @@ class GameViewController: UIViewController {
         msg += "Height :  \(height)\n"
         msg += "Depth :  \(profondeur)"
         
-        let alert = UIAlertController(title: "Informations", message: msg, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        let alert = UIAlertController(title: "Informations", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 	
@@ -328,9 +328,9 @@ class GameViewController: UIViewController {
         var myAlert : UIAlertController
         
         if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") == nil) {
-            myAlert = UIAlertController(title: "Warning", message: "Are you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.alert)
+            myAlert = UIAlertController(title: "Warning", message: "Are you sure to delete this block? ", preferredStyle: .alert)
         } else {
-            myAlert = UIAlertController(title: "Warning", message: "You are trying to delete a merged block. If you delete it, all its children will be deleted.\n\nAre you sure to delete this block? ", preferredStyle: UIAlertControllerStyle.alert)
+            myAlert = UIAlertController(title: "Warning", message: "You are trying to delete a merged block. If you delete it, all its children will be deleted.\n\nAre you sure to delete this block? ", preferredStyle: .alert)
         }
 		// add an "OK" button
         myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
@@ -382,7 +382,7 @@ class GameViewController: UIViewController {
             World.zones[World.selectedZone!].selectedNode?.rotation = SCNVector4Make(0.0, 1.0, 0.0, angle)
 			let nodeRotation =  World.zones[World.selectedZone!].selectedNode?.rotation
             
-            if (sender.state == UIGestureRecognizerState.ended){
+            if (sender.state == .ended){
                 World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationX = nodeRotation?.x
                 World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationY = nodeRotation?.y
                 World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].rotationZ = nodeRotation?.z
@@ -411,7 +411,7 @@ class GameViewController: UIViewController {
 
             World.zones[World.selectedZone!].selectedNode?.scale = SCNVector3(x: Float(self.scale), y: Float(self.scale), z: Float(self.scale))
             
-            if (sender.state == UIGestureRecognizerState.ended){
+            if (sender.state == .ended){
                 World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].scale = Float(self.scale)
                 Utils.saveZone()
             }
@@ -472,7 +472,7 @@ class GameViewController: UIViewController {
             
             World.zones[World.selectedZone!].selectedNode?.position = SCNVector3(x: newX, y: newY, z: newZ)
             
-            if (sender.state == UIGestureRecognizerState.ended){
+            if (sender.state == .ended){
                 if (World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") == nil) { // if there's no merged block
                     World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].x = newX
                     World.zones[World.selectedZone!].blocks[World.zones[World.selectedZone!].getIndex()!].y = newY
@@ -496,21 +496,21 @@ class GameViewController: UIViewController {
 	@IBAction func teleport(sender: AnyObject) {
         let _ : [Int:Int] = World.zones[World.selectedZone!].links
         
-        if ((World.zones[World.selectedZone!].links.values.index(of: World.zones[World.selectedZone!].selectedBlock)) == nil) { // if a block not yet linked
+        if ((World.zones[World.selectedZone!].links.values.firstIndex(of: World.zones[World.selectedZone!].selectedBlock)) == nil) { // if a block not yet linked
             if Teleport.canTeleport() {
                 Teleport.teleportMode = true
                 Teleport.teleportFromBlockId = World.zones[World.selectedZone!].selectedBlock
                 self.dismiss(animated: true, completion: nil)
             } else {
                 // create alert controller
-                let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "You need to have at least another zone not already linked with this zone, which contains at least one unmerged block and with at least one block not linked. ", preferredStyle: UIAlertControllerStyle.alert)
+                let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "You need to have at least another zone not already linked with this zone, which contains at least one unmerged block and with at least one block not linked. ", preferredStyle: .alert)
                 // add an "OK" button
                 myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 // show the alert
                 self.present(myAlert, animated: true, completion: nil)
             }
         } else {
-            let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "This block is already linked. Would you like to remove its link? ", preferredStyle: UIAlertControllerStyle.alert)
+            let myAlert = UIAlertController(title: "Teleportation is unavailable", message: "This block is already linked. Would you like to remove its link? ", preferredStyle: .alert)
             // add an "OK" button
             myAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
                 // We teleport it
@@ -619,8 +619,8 @@ class GameViewController: UIViewController {
                     Teleport.saveTeleport()
                     self.dismiss(animated: true, completion: nil)
                 } else if ((result.node.parent!.value(forKey: "merged")) != nil) { // if player chose a merged block
-                    let alert = UIAlertController(title: "Warning", message: "You can't link the zone to a merged block.", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Warning", message: "You can't link the zone to a merged block.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
             }
@@ -640,7 +640,7 @@ class GameViewController: UIViewController {
                     if id != -1 && id != World.zones[World.selectedZone!].selectedBlock {
                         //print(World.zones[World.selectedZone!].links)
                         
-                        if ((World.zones[World.selectedZone!].links.values.index(of: id)) != nil) { // we find out if it's a teleport or not                                 let index = find(World.zones[World.selectedZone!].links.values, id)
+                        if ((World.zones[World.selectedZone!].links.values.firstIndex(of: id)) != nil) { // we find out if it's a teleport or not                                 let index = find(World.zones[World.selectedZone!].links.values, id)
                         
                             self.doYouWantToTeleport(id)
                         }
@@ -708,7 +708,7 @@ class GameViewController: UIViewController {
                             
                         } else { // If we are on a merged block
                             
-                            let alert = UIAlertController(title: "Warning", message: "This block is already merged. You can't merge it.", preferredStyle: UIAlertControllerStyle.alert)
+                            let alert = UIAlertController(title: "Warning", message: "This block is already merged. You can't merge it.", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                             self.present(alert, animated: true, completion: nil)
                             
@@ -750,7 +750,7 @@ class GameViewController: UIViewController {
             }
         }
         
-        let myAlert = UIAlertController(title: "Teleportation", message: "Would you like to teleport you in \"\(World.zones[idZoneToTeleport].name)\"?", preferredStyle: UIAlertControllerStyle.alert)
+        let myAlert = UIAlertController(title: "Teleportation", message: "Would you like to teleport you in \"\(World.zones[idZoneToTeleport].name)\"?", preferredStyle: .alert)
         
         // add an "OK" button
         myAlert.addAction(UIAlertAction(title: "Go", style: .default, handler: { (action) -> Void in

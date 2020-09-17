@@ -45,7 +45,11 @@ class Tree {
 			let leavesNode = SCNNode(geometry: SCNCone(topRadius: topRadius, bottomRadius: bottomRadius, height: leaveHeight))
 			leavesNode.setValue(-1, forKey: "id")
 
+            #if os(macOS)
 			leavesNode.position.y = y
+            #else
+            leavesNode.position.y = Float(y)
+            #endif
 			y += leaveHeight
 
             leavesNode.geometry?.firstMaterial?.diffuse.contents = SCNColor(red: 35.0/255, green: 82.0/255, blue: 2.0/255, alpha: 1)

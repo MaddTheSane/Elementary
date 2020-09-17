@@ -99,9 +99,9 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 	@IBAction func createZone(sender: AnyObject) {
 		if nameOfZone.text!.isEmpty {
 			// create alert controller
-            let myAlert = UIAlertController(title: "No man's land:", message: "You must provide a name for your zone", preferredStyle: UIAlertControllerStyle.alert)
+            let myAlert = UIAlertController(title: "No man's land:", message: "You must provide a name for your zone", preferredStyle: .alert)
 			// add an "OK" button
-            myAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 			// show the alert
             self.present(myAlert, animated: true, completion: nil)
 		} else {

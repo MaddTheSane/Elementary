@@ -57,11 +57,11 @@ class Block : NSObject, NSCoding {
 		let node = SCNNode(geometry: self.shape)
 		node.geometry!.firstMaterial!.emission.contents = SCNColor.black
         node.setValue(self.id, forKey: "id")
-        node.position = SCNVector3Make(CGFloat(self.x), CGFloat(self.y), CGFloat(self.z))
-        node.scale = SCNVector3Make(CGFloat(self.scale), CGFloat(self.scale), CGFloat(self.scale))
+        node.position = SCNVector3(self.x, self.y, self.z)
+        node.scale = SCNVector3(self.scale, self.scale, self.scale)
         
         if (self.rotationW != nil) {
-            node.rotation = SCNVector4(x: CGFloat(self.rotationX!), y: CGFloat(self.rotationY!), z: CGFloat(self.rotationZ!), w: CGFloat(self.rotationW!))
+            node.rotation = SCNVector4(self.rotationX!, self.rotationY!, self.rotationZ!, self.rotationW!)
         }
         
 		self.node = node
