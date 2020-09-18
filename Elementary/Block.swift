@@ -13,7 +13,7 @@ import UIKit
 #endif
 import SceneKit
 
-class Block : NSObject, NSCoding {
+class Block : NSObject, NSSecureCoding {
 	
 	
 	var id: Int
@@ -84,23 +84,23 @@ class Block : NSObject, NSCoding {
     
     required init(coder decoder: NSCoder) {
 		self.id         = decoder.decodeInteger(forKey: "id")
-		self.texture    = decoder.decodeObject(forKey: "texture") as? String
-		self.red        = decoder.decodeObject(forKey: "red") as! CGFloat
-		self.green      = decoder.decodeObject(forKey: "green") as! CGFloat
-		self.blue       = decoder.decodeObject(forKey: "blue") as! CGFloat
-		self.x          = decoder.decodeObject(forKey: "x") as! Float
-		self.y          = decoder.decodeObject(forKey: "y") as! Float
-		self.z          = decoder.decodeObject(forKey: "z") as! Float
-		self.shape      = decoder.decodeObject(forKey: "shape") as! SCNGeometry
-		self.scale      = decoder.decodeObject(forKey: "scale") as! Float
-		self.rotationX  = decoder.decodeObject(forKey: "rotationX") as? Float
-		self.rotationY  = decoder.decodeObject(forKey: "rotationY") as? Float
-		self.rotationZ  = decoder.decodeObject(forKey: "rotationZ") as? Float
-		self.rotationW  = decoder.decodeObject(forKey: "rotationW") as? Float
-		self.merge      = decoder.decodeObject(forKey: "merge") as! [Int]
-		self.xParent    = decoder.decodeObject(forKey: "xParent") as! Float
-		self.yParent    = decoder.decodeObject(forKey: "yParent") as! Float
-		self.zParent    = decoder.decodeObject(forKey: "zParent") as! Float
+        self.texture    = decoder.decodeObject(of: NSString.self, forKey: "texture") as String?
+		self.red        = decoder.decodeObject(of: NSNumber.self, forKey: "red") as! CGFloat
+		self.green      = decoder.decodeObject(of: NSNumber.self, forKey: "green") as! CGFloat
+		self.blue       = decoder.decodeObject(of: NSNumber.self, forKey: "blue") as! CGFloat
+		self.x          = decoder.decodeFloat(forKey: "x")
+		self.y          = decoder.decodeFloat(forKey: "y")
+		self.z          = decoder.decodeFloat(forKey: "z")
+        self.shape      = decoder.decodeObject(of: SCNGeometry.self, forKey: "shape")!
+		self.scale      = decoder.decodeFloat(forKey: "scale")
+        self.rotationX  = decoder.decodeObject(of: NSNumber.self, forKey: "rotationX") as? Float
+		self.rotationY  = decoder.decodeObject(of: NSNumber.self, forKey: "rotationY") as? Float
+		self.rotationZ  = decoder.decodeObject(of: NSNumber.self, forKey: "rotationZ") as? Float
+		self.rotationW  = decoder.decodeObject(of: NSNumber.self, forKey: "rotationW") as? Float
+        self.merge      = decoder.decodeObject(of: [NSNumber.self, NSArray.self], forKey: "merge") as! [Int]
+		self.xParent    = decoder.decodeFloat(forKey: "xParent")
+		self.yParent    = decoder.decodeFloat(forKey: "yParent")
+		self.zParent    = decoder.decodeFloat(forKey: "zParent")
         
         super.init()
     }
@@ -124,6 +124,10 @@ class Block : NSObject, NSCoding {
 		encoder.encode(xParent, forKey: "xParent")
 		encoder.encode(yParent, forKey: "yParent")
 		encoder.encode(zParent, forKey: "zParent")
+    }
+    
+    class var supportsSecureCoding: Bool {
+        return true
     }
     
 }

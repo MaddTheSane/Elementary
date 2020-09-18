@@ -29,7 +29,7 @@ class LoadAndSaveHome: NSObject, NSCoding {
 }
 
 //Serializing blocks
-class LoadAndSaveZones: NSObject, NSCoding {
+class LoadAndSaveZones: NSObject, NSSecureCoding {
     var blocks: [Block]
     
     init(blocks: [Block]) {
@@ -37,8 +37,12 @@ class LoadAndSaveZones: NSObject, NSCoding {
         super.init()
     }
     
+    class var supportsSecureCoding: Bool {
+        return true
+    }
+    
     required init(coder decoder: NSCoder) {
-        self.blocks = decoder.decodeObject(forKey: "blocks") as! [Block]
+        self.blocks = decoder.decodeObject(of: [Block.self, NSArray.self], forKey: "blocks") as! [Block]
         super.init()
     }
     

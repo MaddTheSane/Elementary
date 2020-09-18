@@ -13,7 +13,7 @@ import UIKit
 #endif
 import SceneKit
 
-class Zone : NSObject, NSCoding {
+class Zone : NSObject, NSSecureCoding {
 	
 	var id: Int
 	var node: SCNNode = SCNNode()
@@ -216,31 +216,35 @@ class Zone : NSObject, NSCoding {
         Utils.saveHome()
     }
 
+    class var supportsSecureCoding: Bool {
+        return true
+    }
+    
     required init(coder decoder: NSCoder) {
-		self.id         = decoder.decodeInteger(forKey: "id")
-		self.counter    = decoder.decodeInteger(forKey: "counter") 
-		self.empty      = decoder.decodeBool(forKey: "empty")
-		self.texture    = decoder.decodeObject(forKey: "texture") as? String
-		self.name       = decoder.decodeObject(forKey: "name") as! String
-		self.red        = decoder.decodeObject(forKey: "red") as! CGFloat
-		self.green      = decoder.decodeObject(forKey: "green") as! CGFloat
-		self.blue       = decoder.decodeObject(forKey: "blue") as! CGFloat
-		self.textured   = decoder.decodeBool(forKey: "textured")
-		self.links      = decoder.decodeObject(forKey: "links") as! [Int:Int]
+        self.id         = decoder.decodeInteger(forKey: "id")
+        self.counter    = decoder.decodeInteger(forKey: "counter")
+        self.empty      = decoder.decodeBool(forKey: "empty")
+        self.texture    = decoder.decodeObject(of: NSString.self, forKey: "texture") as String?
+        self.name       = decoder.decodeObject(of: NSString.self, forKey: "name")! as String
+        self.red        = decoder.decodeObject(of: NSNumber.self, forKey: "red") as! CGFloat
+        self.green      = decoder.decodeObject(of: NSNumber.self, forKey: "green") as! CGFloat
+        self.blue       = decoder.decodeObject(of: NSNumber.self, forKey: "blue") as! CGFloat
+        self.textured   = decoder.decodeBool(forKey: "textured")
+        self.links      = decoder.decodeObject(of: [NSNumber.self, NSDictionary.self], forKey: "links") as! [Int:Int]
         super.init()
     }
     
     func encode(with encoder: NSCoder) {
-		encoder.encode(id, forKey:"id")
-		encoder.encode(counter, forKey:"counter")
-		encoder.encode(empty, forKey:"empty")
-		encoder.encode(texture, forKey:"texture")
-		encoder.encode(name, forKey:"name")
-		encoder.encode(red, forKey:"red")
-		encoder.encode(green, forKey:"green")
-		encoder.encode(blue, forKey:"blue")
-		encoder.encode(textured, forKey:"textured")
-		encoder.encode(links, forKey:"links")
+        encoder.encode(id, forKey:"id")
+        encoder.encode(counter, forKey:"counter")
+        encoder.encode(empty, forKey:"empty")
+        encoder.encode(texture, forKey:"texture")
+        encoder.encode(name, forKey:"name")
+        encoder.encode(red, forKey:"red")
+        encoder.encode(green, forKey:"green")
+        encoder.encode(blue, forKey:"blue")
+        encoder.encode(textured, forKey:"textured")
+        encoder.encode(links, forKey:"links")
     }
 	
 }

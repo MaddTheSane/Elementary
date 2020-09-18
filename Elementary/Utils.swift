@@ -62,28 +62,36 @@ class Utils {
 		Utils.getPath(6)
         
 		let znes = LoadAndSaveHome(zones: World.zones)
-		var success = false
-		success = NSKeyedArchiver.archiveRootObject(znes, toFile: path)
-		//print("save home ? \(success)")
-		//print("path = \(path)")
-		return success
+        guard let dat = try? NSKeyedArchiver.archivedData(withRootObject: znes, requiringSecureCoding: true) else {
+            return false
+        }
+        
+        let url = URL(fileURLWithPath: path)
+        do {
+            try dat.write(to: url)
+            return true
+        } catch {
+            return false
+        }
 	}
 	
 	class func loadHome() -> [Zone]? {
 		Utils.getPath(6) // Get Path for Home
         
 		//print("path = \(path)")
-		if let scene = NSKeyedUnarchiver.unarchiveObject(withFile: path) as! LoadAndSaveHome? {
-			//print("Loaded home!")
-            
-            for i in scene.zones {
-                i.buildZone()
-            }
-            
-            return scene.zones
-		} else {
-			return nil
-		}
+        let url = URL(fileURLWithPath: path)
+        guard let dat = try? Data(contentsOf: url),
+            let scene = try? NSKeyedUnarchiver.unarchivedObject(ofClass: LoadAndSaveHome.self, from: dat) else {
+            return nil
+        }
+        
+        //print("Loaded home!")
+        
+        for i in scene.zones {
+            i.buildZone()
+        }
+        
+        return scene.zones
     }
     
 	@discardableResult
@@ -92,24 +100,32 @@ class Utils {
         Utils.getPath(idZone)
         
         let blockOfZone = LoadAndSaveZones(blocks: World.zones[idZone].blocks)
-        var success = false
-        success = NSKeyedArchiver.archiveRootObject(blockOfZone, toFile: path)
+        guard let dat = try? NSKeyedArchiver.archivedData(withRootObject: blockOfZone, requiringSecureCoding: true) else {
+            return false
+        }
+        let url = URL(fileURLWithPath: path)
+        do {
+            try dat.write(to: url)
+            return true
+        } catch {
+            return false
+        }
         //print("save blocks of zone (id: \(idZone)) ? \(success)")
         //print("path = \(path)")
-        return success
     }
     
     class func loadZone(_ idZone: Int) -> [Block]? {
         Utils.getPath(idZone) // Get Path for Home
         
         //print("path = \(path)")
-		if let blocks = NSKeyedUnarchiver.unarchiveObject(withFile: path) as! LoadAndSaveZones? {
+        let url = URL(fileURLWithPath: path)
+        guard let dat = try? Data(contentsOf: url),
+            let blocks = try? NSKeyedUnarchiver.unarchivedObject(ofClass: LoadAndSaveZones.self, from: dat) else {
             //print("Loaded blocks of zone with id \(idZone) !")
             
-            return blocks.blocks
-        } else {
             return nil
         }
+        return blocks.blocks
     }
 }
 
@@ -126,7 +142,7 @@ extension String {
 	}
 	
 	var floatValue: Float {
-		return (self as NSString).floatValue
+		return Float(self) ?? 0
 	}
 }
 

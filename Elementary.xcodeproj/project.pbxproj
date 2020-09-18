@@ -23,6 +23,7 @@
 		55F949EF251357ED00A306AA /* elementary.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F615013F1B2DF63B0063E6E8 /* elementary.mp3 */; };
 		55F94A0025135AFA00A306AA /* SCNBridges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F949FF25135AFA00A306AA /* SCNBridges.swift */; };
 		55F94A0125135AFA00A306AA /* SCNBridges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F949FF25135AFA00A306AA /* SCNBridges.swift */; };
+		55F94A042514895600A306AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F94A022514895600A306AA /* AppDelegate.swift */; };
 		F60960541B2323D6003896B6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F60960531B2323D6003896B6 /* Images.xcassets */; };
 		F610F3D81AF6A23500FA8F88 /* TexturedHouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F610F3D71AF6A23500FA8F88 /* TexturedHouse.swift */; };
 		F615013E1B2DDA010063E6E8 /* Teleport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F615013D1B2DDA010063E6E8 /* Teleport.swift */; };
@@ -51,6 +52,7 @@
 		55F949F4251357ED00A306AA /* Elementary macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Elementary macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55F949F5251357ED00A306AA /* Elementary-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Elementary-Info.plist"; path = "Mac Sources/Elementary-Info.plist"; sourceTree = SOURCE_ROOT; };
 		55F949FF25135AFA00A306AA /* SCNBridges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCNBridges.swift; sourceTree = "<group>"; };
+		55F94A022514895600A306AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F60960531B2323D6003896B6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F610F3D71AF6A23500FA8F88 /* TexturedHouse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TexturedHouse.swift; sourceTree = "<group>"; };
 		F615013D1B2DDA010063E6E8 /* Teleport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teleport.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				55F949F5251357ED00A306AA /* Elementary-Info.plist */,
+				55F94A022514895600A306AA /* AppDelegate.swift */,
 			);
 			path = "Mac Sources";
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55F94A042514895600A306AA /* AppDelegate.swift in Sources */,
 				55F949D9251357ED00A306AA /* LoadAndSave.swift in Sources */,
 				55F949DB251357ED00A306AA /* House.swift in Sources */,
 				55F949DD251357ED00A306AA /* Music.swift in Sources */,

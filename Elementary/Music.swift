@@ -19,8 +19,8 @@ class Music {
 		
 		let mediapath = "elementary"
 		
-		if let path = Bundle.main.path(forResource: mediapath, ofType: "mp3") {
-			try! player = AVAudioPlayer(contentsOf: URL(fileURLWithPath: path), fileTypeHint: "mp3")
+		if let path = Bundle.main.url(forResource: mediapath, withExtension: "mp3") {
+			try! player = AVAudioPlayer(contentsOf: path, fileTypeHint: "mp3")
 			player?.numberOfLoops = -1
 			player?.prepareToPlay()
 			player?.play()
