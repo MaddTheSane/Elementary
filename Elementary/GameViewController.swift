@@ -91,7 +91,7 @@ class GameViewController: UIViewController {
 		self.sceneSetup()
 	}
 	
-    @IBAction func cancelMergeButton(sender: AnyObject) {
+    @IBAction func cancelMergeButton(_ sender: AnyObject) {
         //print("cancel merge")
        
         for blocks : SCNNode in self.mergingNodes {
@@ -104,7 +104,7 @@ class GameViewController: UIViewController {
         showHideEdition()
     }
     
-    @IBAction func validMergeButton(sender: AnyObject) {
+    @IBAction func validMergeButton(_ sender: AnyObject) {
         if (mergingNodes.count > 1) { // Multiple blocks
             
             var idBlocks = [Int]()
@@ -150,7 +150,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    @IBAction func mergeButtonClick(sender: AnyObject) {
+    @IBAction func mergeButtonClick(_ sender: AnyObject) {
         self.mergingNodes.append(World.zones[World.selectedZone!].selectedNode!)
         
         let msg = "You can now select all the objects you want to merge.\n\nTouch OK to merge the selected objects or the red cross to cancel."
@@ -172,7 +172,7 @@ class GameViewController: UIViewController {
         
     }
     
-    @IBAction func unmergeButtonClick(sender: AnyObject) {
+    @IBAction func unmergeButtonClick(_ sender: AnyObject) {
         if (World.zones[World.selectedZone!].selectedNode?.value(forKey: "merged") != nil) {
             // create alert controller
             let myAlert = UIAlertController(title: "Warning", message: "Are you sure to unmerge these blocks?", preferredStyle: .alert)
@@ -209,7 +209,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    @IBAction func infoButtonClick(sender: AnyObject) {
+    @IBAction func infoButtonClick(_ sender: AnyObject) {
 		let precision = 1
         let sNode = World.zones[World.selectedZone!].selectedNode!
 		let width = String(format: "%.\(precision)f", getDimensionForSelectedNode("x"))
@@ -370,11 +370,11 @@ class GameViewController: UIViewController {
         self.present(myAlert, animated: true, completion: nil)
 	}
     
-	@IBAction func switchCameraMode(sender: AnyObject) {
+	@IBAction func switchCameraMode(_ sender: AnyObject) {
         changeCamera() // when we click on the camera we change state
     }
 	
-    @IBAction func rotateGesture(sender: UIRotationGestureRecognizer) {
+    @IBAction func rotateGesture(_ sender: UIRotationGestureRecognizer) {
         if (World.zones[World.selectedZone!].selectedBlock != -1 && cameraBloqued && !merging) {
 			let angleIncrement : Float = (sender.rotation > 0) ? 0.05 : -0.05
 			self.angle += angleIncrement
@@ -399,7 +399,7 @@ class GameViewController: UIViewController {
 		}
     }
 	
-    @IBAction func zoomNodeGesture(sender: UIPinchGestureRecognizer) {
+    @IBAction func zoomNodeGesture(_ sender: UIPinchGestureRecognizer) {
         if (World.zones[World.selectedZone!].selectedBlock != -1 && cameraBloqued && World.zones[World.selectedZone!].selectedNode!.value(forKey: "merged") == nil && !merging) { // if camera is blocked we take control
 			var scaleIncrement : CGFloat = sender.scale
 			scaleIncrement = (scaleIncrement - 1 )
@@ -418,7 +418,7 @@ class GameViewController: UIViewController {
         }
 	}
 	
-    @IBAction func moveNodesGestures(sender: UIPanGestureRecognizer) {
+    @IBAction func moveNodesGestures(_ sender: UIPanGestureRecognizer) {
         if (World.zones[World.selectedZone!].selectedBlock != -1 && cameraBloqued && !merging) { // only if fixed camera
             // direction.y => when we go up, it's < 0
             // direction.y => when we go down, it's > 0
@@ -493,7 +493,7 @@ class GameViewController: UIViewController {
         }
     }
     
-	@IBAction func teleport(sender: AnyObject) {
+	@IBAction func teleport(_ sender: AnyObject) {
         let _ : [Int:Int] = World.zones[World.selectedZone!].links
         
         if ((World.zones[World.selectedZone!].links.values.firstIndex(of: World.zones[World.selectedZone!].selectedBlock)) == nil) { // if a block not yet linked

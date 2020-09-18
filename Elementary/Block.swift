@@ -68,17 +68,17 @@ class Block : NSObject, NSSecureCoding {
 	}
 	
 	func setTexture(_ texture: String?, red: CGFloat, green: CGFloat, blue: CGFloat){
-		if texture == nil {
+		if let texture = texture {
+            //print("mode texture")
+            self.texture = texture
+            self.node?.geometry?.firstMaterial?.diffuse.contents = SCNImage(named: self.texture!)
+        } else {
 			self.red = red
 			self.green = green
 			self.blue = blue
 			//print("mode color red = \(self.red) green = \(self.green) blue = \(self.blue)")
 			let color = SCNColor(red: self.red, green: self.green, blue: self.blue, alpha: 1)
 			self.node?.geometry?.firstMaterial?.diffuse.contents = color
-		} else {
-			//print("mode texture")
-			self.texture = texture!
-			self.node?.geometry?.firstMaterial?.diffuse.contents = SCNImage(named: self.texture!)
 		}
 	}
     

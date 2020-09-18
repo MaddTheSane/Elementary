@@ -13,12 +13,12 @@ class SettingsViewController: UIViewController, UIPopoverPresentationControllerD
 	
 
     
-    @IBAction func quit(sender: AnyObject) {
+    @IBAction func quit(_ sender: AnyObject) {
 		self.dismiss(animated: true, completion: nil)
     }
     
 	@IBOutlet weak var volume: UISlider!
-	@IBAction func slideVolume(sender: AnyObject) {
+	@IBAction func slideVolume(_ sender: AnyObject) {
 		
 		Music.adjustVolume(volume.value)
 	}

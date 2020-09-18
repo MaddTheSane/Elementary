@@ -108,7 +108,7 @@ class WorldViewController: UIViewController {
         self.setNodePosition(World.selectedZone!)
     }
 	
-	@IBAction func gotoSelectedZone(sender: AnyObject) {
+	@IBAction func gotoSelectedZone(_ sender: AnyObject) {
 		
 		if World.zones[World.selectedZone!].empty == true {
             self.performSegue(withIdentifier: "createArea", sender: self)
@@ -119,7 +119,7 @@ class WorldViewController: UIViewController {
 		}
 	}
 	
-	@IBAction func removeSelectedZone(sender: AnyObject) {
+	@IBAction func removeSelectedZone(_ sender: AnyObject) {
 		// create alert controller
         let myAlert = UIAlertController(title: "Warning!", message: "Are you sure to delete \(World.zones[World.selectedZone!].name)? All the data inside the zone will be lost.", preferredStyle: .alert)
 		// add an "OK" button
@@ -134,7 +134,7 @@ class WorldViewController: UIViewController {
         self.present(myAlert, animated: true, completion: nil)
 	}
 	
-	@IBAction func editSelectedZone(sender: AnyObject) {
+	@IBAction func editSelectedZone(_ sender: AnyObject) {
         self.performSegue(withIdentifier: "createArea", sender: self)
         self.goToZoneOutlet.isHidden = true
         self.editButton.isHidden = true

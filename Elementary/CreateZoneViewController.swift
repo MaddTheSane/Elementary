@@ -92,11 +92,11 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 		self.modifyPreviewZone()
 	}
 	
-	@IBAction func dismiss(sender: AnyObject) {
+	@IBAction func dismiss(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
 	}
 	
-	@IBAction func createZone(sender: AnyObject) {
+	@IBAction func createZone(_ sender: AnyObject) {
 		if nameOfZone.text!.isEmpty {
 			// create alert controller
             let myAlert = UIAlertController(title: "No man's land:", message: "You must provide a name for your zone", preferredStyle: .alert)
@@ -129,7 +129,7 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 	func createTexture() -> [String] {
 		var tab: [String] = []
 		for i in 0...14 {
-			let name = "g\(i).png"
+			let name = "g\(i)"
 			tab.append(name)
 		}
 		return tab
@@ -183,7 +183,7 @@ class CreateZoneViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	
-	@IBAction func tabsDidChange(sender: AnyObject) {
+	@IBAction func tabsDidChange(_ sender: AnyObject) {
 		
 		switch sender.selectedSegmentIndex {
 		case 0:

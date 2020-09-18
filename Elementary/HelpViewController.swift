@@ -12,12 +12,12 @@ class HelpViewController: UIViewController, UIScrollViewDelegate, UIGestureRecog
 
     
     // MARK: IBAction
-    @IBAction func quit(sender: AnyObject) {
+    @IBAction func quit(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
 	@IBOutlet weak var callOutLabel: UITextView!
 	@IBOutlet weak var callOutPageControl: UIPageControl? = UIPageControl()
-	@IBAction func callOutPageControlChanged(sender: AnyObject) {
+	@IBAction func callOutPageControlChanged(_ sender: AnyObject) {
 		let selectedPage = self.callOutPageControl?.currentPage
 		self.callOutLabel?.text = callOutMsg[selectedPage!]
 	}

@@ -45,7 +45,7 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
         self.dismiss(animated: true, completion: nil)
 	}
 	
-	@IBAction func createBlock(sender: AnyObject) {
+	@IBAction func createBlock(_ sender: AnyObject) {
 		
         // we create the block
         World.zones[World.selectedZone!].counter += 1
@@ -221,7 +221,7 @@ class ShapeViewController: UIViewController, UICollectionViewDataSource, UIColle
 		return true
 	}
 	
-	@IBAction func tabsDidChange(sender: AnyObject) {
+	@IBAction func tabsDidChange(_ sender: AnyObject) {
 		
 		switch sender.selectedSegmentIndex {
 		case 0:
